@@ -22,7 +22,6 @@ return new class extends Migration
             $table->string("chassis")->unique();
             $table->string("engine")->nullable();
             $table->float("price")->default(0);
-            $table->float("expenses")->default(0);
             $table->text('notes')->nullable();
             $table->timestamps();
         });

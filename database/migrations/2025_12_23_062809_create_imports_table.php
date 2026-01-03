@@ -16,6 +16,9 @@ return new class extends Migration
             $table->string('inv_no')->nullable();
             $table->bigInteger('export_id');
             $table->date('date');
+            $table->float('bike_expenses');
+            $table->float('car_expenses');
+            $table->float('part_expenses');
             $table->string('c_no')->nullable();
             $table->string('status')->default('Pending');
             $table->timestamps();

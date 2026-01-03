@@ -17,7 +17,6 @@ return new class extends Migration
             $table->string('part_name');
             $table->float('qty');
             $table->float("price")->default(0);
-            $table->float("expenses")->default(0);
             $table->timestamps();
         });
     }

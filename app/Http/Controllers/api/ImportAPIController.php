@@ -34,27 +34,15 @@ class ImportAPIController extends Controller
             'export_id' => $request->id,
             'date' => $request->date,
             'c_no' => $request->cno,
+            'bike_expenses' => $request->bike_expenses,
+            'car_expenses' => $request->car_expenses,
+            'part_expenses' => $request->part_expenses,
         ]);
 
         // Process cars
         if ($request->has('cars') && is_array($request->cars)) {
-            $car_expense = $request->car_expense;
-            $bike_expense = $request->other_expense;
-            $bike_count = 0;
-            $car_count = 0;
-            foreach ($request->cars as $c) {
-                if (isset($c['type']) && $c['type'] == 'Bike') {
-                    $bike_count++;
-                } else {
-                    $car_count++;
-                }
-            }
-
-            $expensePerCar = $car_count > 0 ? $car_expense / $car_count : 0;
-            $expensePerBike = $bike_count > 0 ? $bike_expense / $bike_count : 0;
 
             foreach ($request->cars as $car) {
-                $expense = (isset($car['type']) && $car['type'] == 'bike') ? $expensePerBike : $expensePerCar;
 
                 import_cars::create([
                     'import_id' => $import->id,
@@ -66,7 +54,6 @@ class ImportAPIController extends Controller
                     'chassis' => $car['chassis'] ?? null,
                     'engine' => $car['engine'] ?? null,
                     'price' => $car['price'] ?? 0,
-                    'expenses' => $car['type'] == 'Bike' ? $expensePerBike : $expensePerCar,
                     'notes' => $car['notes'] ?? null,
                 ]);
             }
@@ -74,19 +61,12 @@ class ImportAPIController extends Controller
 
         // Process parts
         if ($request->has('parts') && is_array($request->parts)) {
-            $total_parts = 0;
-            foreach ($request->parts as $forqty) {
-                $total_parts += $forqty['qty'];
-            }
-            $total_expense = $request->part_expense;
-            $expensePerPart = $total_expense / $total_parts;
             foreach ($request->parts as $part) {
                 import_parts::create([
                     'import_id' => $import->id,
                     'part_name' => $part['part_name'] ?? null,
                     'qty' => $part['qty'] ?? 1,
                     'price' => $part['price'] ?? 0,
-                    'expenses' => $expensePerPart,
                 ]);
             }
         }
