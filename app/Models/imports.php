@@ -8,13 +8,13 @@ class imports extends Model
 {
     protected $guarded = [];
 
-    public function import_cars()
+    public function cars()
     {
-        return $this->hasMany(import_cars::class);
+        return $this->hasMany(import_cars::class, 'import_id', 'id');
     }
 
-    public function import_parts()
+    public function parts()
     {
-        return $this->hasMany(import_parts::class);
+        return $this->hasMany(import_parts::class, 'import_id', 'id');
     }
 }

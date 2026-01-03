@@ -25,7 +25,7 @@
             </form>
             <div class="card">
                 <div class="card-header d-flex justify-content-between">
-                    <h3>Purchases</h3>
+                    <h3>Imports</h3>
                 </div>
                 <div class="card-body">
                     @if ($errors->any())
@@ -55,9 +55,9 @@
                                     <td>{{ $import->inv_no }}</td>
                                     <td>{{ $import->c_no }}</td>
                                     <td>
-                                        @if ($import->status == 'pending')
+                                        @if ($import->status == 'Pending')
                                             <span class="badge bg-warning">Pending</span>
-                                        @elseif ($import->status == 'approved')
+                                        @elseif ($import->status == 'Approved')
                                             <span class="badge bg-success">Approved</span>
                                         @else
                                             <span class="badge bg-danger">Rejected</span>
@@ -70,10 +70,10 @@
                                                 <i class="ri-more-fill align-middle"></i>
                                             </button>
                                             <ul class="dropdown-menu dropdown-menu-end">
+
                                                 <li>
                                                     <button class="dropdown-item"
-                                                        onclick="newWindow('{{ route('purchase.show', $purchase->id) }}')"
-                                                        onclick=""><i
+                                                        onclick="newWindow('{{ route('imports.view', $import->id) }}')"><i
                                                             class="ri-eye-fill align-bottom me-2 text-muted"></i>
                                                         View
                                                     </button>
