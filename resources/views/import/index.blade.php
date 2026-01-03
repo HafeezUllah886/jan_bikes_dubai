@@ -44,6 +44,7 @@
                             <th>Date</th>
                             <th>Invoice No.</th>
                             <th>Container No.</th>
+                            <th>Status</th>
                             <th>Action</th>
                         </thead>
                         <tbody>
@@ -53,6 +54,15 @@
                                     <td>{{ date('d M Y', strtotime($import->date)) }}</td>
                                     <td>{{ $import->inv_no }}</td>
                                     <td>{{ $import->c_no }}</td>
+                                    <td>
+                                        @if ($import->status == 'pending')
+                                            <span class="badge bg-warning">Pending</span>
+                                        @elseif ($import->status == 'approved')
+                                            <span class="badge bg-success">Approved</span>
+                                        @else
+                                            <span class="badge bg-danger">Rejected</span>
+                                        @endif
+                                    </td>
                                     <td>
                                         <div class="dropdown">
                                             <button class="btn btn-soft-secondary btn-sm dropdown" type="button"

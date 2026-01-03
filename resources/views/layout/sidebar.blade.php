@@ -62,6 +62,12 @@
                         <i class="ri-dashboard-2-line"></i> <span data-key="t-dashboards">Dashboards</span>
                     </a>
                 </li> <!-- end Dashboard Menu -->
+                <li class="nav-item">
+                    <a class="nav-link menu-link" href="{{ route('imports.index') }}">
+                        <i class="ri-shopping-cart-line"></i> <span data-key="t-dashboards">Imports</span>
+                    </a>
+                </li> <!-- end Dashboard Menu -->
+
 
                 <li class="nav-item">
                     <a class="nav-link menu-link" href="#purchase" data-bs-toggle="collapse" role="button"
@@ -81,7 +87,7 @@
                         </ul>
                     </div>
                 </li>
-              <li class="nav-item">
+                <li class="nav-item">
                     <a class="nav-link menu-link" href="#sale" data-bs-toggle="collapse" role="button"
                         aria-expanded="false" aria-controls="sidebarApps">
                         <i class="ri-shopping-cart-line"></i><span data-key="t-apps">Sale</span>
@@ -95,11 +101,12 @@
                         </ul>
                     </div>
                 </li>
-               
-              <li class="nav-item">
-                <a href="#sidebarFinance" class="nav-link" data-bs-toggle="collapse" role="button" aria-expanded="false" aria-controls="sidebarFinance" data-key="t-level-1.2">
-                    <i class="ri-settings-2-line"></i><span data-key="t-apps">Finance</span>
-                </a>
+
+                <li class="nav-item">
+                    <a href="#sidebarFinance" class="nav-link" data-bs-toggle="collapse" role="button"
+                        aria-expanded="false" aria-controls="sidebarFinance" data-key="t-level-1.2">
+                        <i class="ri-settings-2-line"></i><span data-key="t-apps">Finance</span>
+                    </a>
                     <div class="collapse menu-dropdown" id="sidebarFinance">
                         <ul class="nav nav-sm flex-column">
                             <li class="nav-item">
@@ -107,25 +114,26 @@
                                     data-key="t-level-2.1"> Account Adjustment </a>
                             </li>
                             <li class="nav-item">
-                                <a href="{{ route('transfers.index') }}" class="nav-link"
-                                    data-key="t-level-2.1"> Transfer </a>
+                                <a href="{{ route('transfers.index') }}" class="nav-link" data-key="t-level-2.1">
+                                    Transfer </a>
                             </li>
                             <li class="nav-item">
-                                <a href="{{ route('expenses.index') }}" class="nav-link"
-                                    data-key="t-level-2.1"> Expense </a>
+                                <a href="{{ route('expenses.index') }}" class="nav-link" data-key="t-level-2.1">
+                                    Expense </a>
                             </li>
                         </ul>
                     </div>
                 </li>
-              <li class="nav-item">
-                <a href="#sidebarAccount" class="nav-link" data-bs-toggle="collapse" role="button" aria-expanded="false" aria-controls="sidebarAccount" data-key="t-level-1.2">
-                    <i class="ri-settings-2-line"></i><span data-key="t-apps">Accounts</span>
-                </a>
+                <li class="nav-item">
+                    <a href="#sidebarAccount" class="nav-link" data-bs-toggle="collapse" role="button"
+                        aria-expanded="false" aria-controls="sidebarAccount" data-key="t-level-1.2">
+                        <i class="ri-settings-2-line"></i><span data-key="t-apps">Accounts</span>
+                    </a>
                     <div class="collapse menu-dropdown" id="sidebarAccount">
                         <ul class="nav nav-sm flex-column">
                             <li class="nav-item">
-                                <a href="{{ route('account.create') }}" class="nav-link"
-                                    data-key="t-level-2.1"> Create Account </a>
+                                <a href="{{ route('account.create') }}" class="nav-link" data-key="t-level-2.1">
+                                    Create Account </a>
                             </li>
                             <li class="nav-item">
                                 <a href="{{ route('accountsList', 'Business') }}" class="nav-link"
