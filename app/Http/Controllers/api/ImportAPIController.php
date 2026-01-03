@@ -18,7 +18,7 @@ class ImportAPIController extends Controller
 {
     try {
 
-        $check = imports::where('export_id', $request->export_id)->first();
+        $check = imports::where('export_id', $request->id)->first();
 
         if ($check) {
             return response()->json([
