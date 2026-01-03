@@ -11,14 +11,13 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('transfers', function (Blueprint $table) {
+        Schema::create('imports', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('from')->constrained('accounts', 'id');
-            $table->foreignId('to')->constrained('accounts', 'id');
-            $table->float('amount');
+            $table->string('inv_no')->nullable();
+            $table->bigInteger('export_id');
             $table->date('date');
-            $table->text('notes')->nullable();
-            $table->bigInteger('refID');
+            $table->string('c_no')->nullable();
+            $table->string('status')->default('Pending');
             $table->timestamps();
         });
     }
@@ -28,6 +27,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('transfers');
+        Schema::dropIfExists('imports');
     }
 };

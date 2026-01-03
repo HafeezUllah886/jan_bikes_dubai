@@ -1,6 +1,6 @@
 <?php
 
-use App\Http\Controllers\api\PurchaseAPIController;
+use App\Http\Controllers\api\ImportAPIController;
 use Illuminate\Support\Facades\Route;
 
-Route::post('/purchase/store', [PurchaseAPIController::class, 'store']);
+Route::post('/import/store', [ImportAPIController::class, 'store']);

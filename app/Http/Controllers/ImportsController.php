@@ -2,20 +2,17 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Controllers\Controller;
-use App\Models\expenseCategories;
+use App\Models\imports;
 use Illuminate\Http\Request;
 
-class ExpenseCategoriesController extends Controller
+class ImportsController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        $cats = expenseCategories::orderBy('name', 'asc')->get();
-
-        return view('finance.expense.categories', compact('cats'));
+        //
     }
 
     /**
@@ -31,14 +28,13 @@ class ExpenseCategoriesController extends Controller
      */
     public function store(Request $request)
     {
-        expenseCategories::create($request->all());
-        return back()->with('msg', 'Category Created');
+        //
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(expenseCategories $categories)
+    public function show(imports $imports)
     {
         //
     }
@@ -46,7 +42,7 @@ class ExpenseCategoriesController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(expenseCategories $categories)
+    public function edit(imports $imports)
     {
         //
     }
@@ -54,16 +50,15 @@ class ExpenseCategoriesController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, imports $imports)
     {
-        expenseCategories::find($id)->update($request->all());
-        return back()->with('msg', 'Category Updated');
+        //
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(expenseCategories $categories)
+    public function destroy(imports $imports)
     {
         //
     }

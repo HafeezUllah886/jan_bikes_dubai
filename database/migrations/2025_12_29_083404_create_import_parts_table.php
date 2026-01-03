@@ -11,10 +11,13 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('payment_categories', function (Blueprint $table) {
+        Schema::create('import_parts', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
-            $table->enum('for',['Receive','Payment']);
+            $table->foreignId('import_id')->constrained('imports');
+            $table->string('part_name');
+            $table->float('qty');
+            $table->float("price")->default(0);
+            $table->float("expenses")->default(0);
             $table->timestamps();
         });
     }
@@ -24,6 +27,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('payment_categories');
+        Schema::dropIfExists('import_parts');
     }
 };

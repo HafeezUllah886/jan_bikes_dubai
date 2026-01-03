@@ -160,14 +160,14 @@ function calculateGrowthPercentage($oldValue, $newValue) {
 
 function projectNameAuth()
 {
-    return "Jan Trading Company";
+    return "Jan Bikes Dubai";
 }
 
 function projectNameHeader()
 {
-    return "JAN TRADING COMPANY";
+    return "JAN BIKES DUBAI";
 }
 function projectNameShort()
 {
-    return "JTC";
+    return "JBD";
 }
