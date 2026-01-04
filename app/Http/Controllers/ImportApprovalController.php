@@ -22,12 +22,14 @@ class ImportApprovalController extends Controller
         return view('import.view', compact('import'));
     }
 
-    public function approve(Request $request)
+    public function approve(Request $request, $id)
     {
-        $import = imports::findOrFail($request->id);
-        $import->status = 'approved';
-        $import->save();
-        return redirect()->route('imports.index')->with('success', 'Import approved successfully');
+        $import = imports::findOrFail($id);
+        $car_expense_dubai = $request->car_expense;
+        $bike_expense_dubai = $request->bike_expense;
+        $part_expense_dubai = $request->parts_expense;
+        
+        return view('import.approve', compact('import', 'car_expense_dubai', 'bike_expense_dubai', 'part_expense_dubai'));
     }
 
     public function delete(Request $request)
