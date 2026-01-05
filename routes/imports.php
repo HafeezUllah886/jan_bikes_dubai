@@ -16,6 +16,6 @@ Route::middleware('auth')->group(function () {
     Route::get('imports/{id}/view', [ImportApprovalController::class, 'view'])->name('imports.view');
     Route::get('imports/{id}/approve', [ImportApprovalController::class, 'approve'])->name('imports.approve');
     Route::post('imports/{id}/approve', [ImportApprovalController::class, 'store_approval'])->name('imports.approve.store');
-    Route::get('imports/{id}/delete', [ImportApprovalController::class, 'delete'])->name('imports.delete');
+    Route::get('imports/{id}/delete', [ImportApprovalController::class, 'delete'])->name('imports.delete')->middleware(confirmPassword::class);
 
 });

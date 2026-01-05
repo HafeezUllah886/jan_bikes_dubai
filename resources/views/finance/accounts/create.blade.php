@@ -32,24 +32,25 @@
                                     <select name="type" id="type" class="form-control">
                                         <option value="Business">Business</option>
                                         <option value="Customer">Customer</option>
+                                        <option value="Vendor">Vendor</option>
                                     </select>
                                 </div>
                             </div>
-                            <div class="col-6 mt-2" >
+                            <div class="col-6 mt-2">
                                 <div class="form-group customer">
                                     <label for="contact">Contact #</label>
                                     <input type="text" name="contact" id="contact" value="{{ old('contact') }}"
                                         class="form-control">
                                 </div>
                             </div>
-                            <div class="col-6 mt-2 customer" >
+                            <div class="col-6 mt-2 customer">
                                 <div class="form-group">
                                     <label for="address">Address</label>
                                     <input type="text" name="address" id="address" value="{{ old('address') }}"
                                         class="form-control">
                                 </div>
                             </div>
-                        
+
                             <div class="col-12 mt-3">
                                 <button type="submit" class="btn btn-secondary w-100">Create</button>
                             </div>
@@ -67,25 +68,20 @@
     <link rel="stylesheet" href="{{ asset('assets/libs/selectize/selectize.min.css') }}">
 @endsection
 @section('page-js')
-<script src="{{ asset('assets/libs/selectize/selectize.min.js') }}"></script>
+    <script src="{{ asset('assets/libs/selectize/selectize.min.js') }}"></script>
     <script>
         $(".customer").hide();
         $(".selectize").selectize();
-        $("#type").on("change",  function (){
+        $("#type").on("change", function() {
             var type = $("#type").find(":selected").val();
 
-            if(type === "Customer")
-            {
+            if (type === "Customer") {
                 $(".customer").show();
-            }
-            else if(type === "Business")
-            {
-               
+            } else if (type === "Business") {
+
                 $(".customer").hide();
                 $(".businesss").show();
-            }
-            else
-            {
+            } else {
                 $(".customer").hide();
                 $(".business").hide();
             }

@@ -86,7 +86,7 @@
                                                             <td class='no-padding'>{{ $car->meter_type }}</td>
                                                             <td class='no-padding'>{{ $car->notes }}</td>
                                                             <td class="text-end no-padding">
-                                                                <input type="number" name="car_price[]"
+                                                                <input type="number" name="car_price[]" readonly
                                                                     value="{{ round($car->price, 4) }}"
                                                                     class="form-control">
                                                             </td>
@@ -109,8 +109,10 @@
                                                             </td>
                                                             <td class="text-end no-padding">
                                                                 <input type="number" name="car_sale_price[]" required
-                                                                    value="" class="form-control">
+                                                                    value="0" class="form-control">
                                                             </td>
+                                                            <input type="hidden" name="car_id[]"
+                                                                value="{{ $car->id }}">
                                                         </tr>
                                                     @endif
                                                 @endforeach
@@ -191,8 +193,10 @@
                                                             </td>
                                                             <td class="text-end no-padding">
                                                                 <input type="number" name="car_sale_price[]" required
-                                                                    value="" class="form-control">
+                                                                    value="0" class="form-control">
                                                             </td>
+                                                            <input type="hidden" name="car_id[]"
+                                                                value="{{ $car->id }}">
                                                         </tr>
                                                     @endif
                                                 @endforeach
@@ -263,8 +267,10 @@
                                                         </td>
                                                         <td class="text-center no-padding">
                                                             <input type="number" required name="part_sale_price[]"
-                                                                value="" class="form-control">
+                                                                value="0" class="form-control">
                                                         </td>
+                                                        <input type="hidden" name="part_id[]"
+                                                            value="{{ $part->id }}">
                                                     </tr>
                                                 @endforeach
                                             </tbody>
@@ -288,7 +294,8 @@
                                             </tfoot>
                                         </table>
                                     </div>
-
+                                    <button type="submit" class="btn btn-primary w-100">Approve</button>
+                                </form>
                             </div>
                             <!--end row-->
                         </div>
@@ -302,41 +309,6 @@
         <!--end col-->
     </div>
     <!--end row-->
-    <div id="new" class="modal fade" tabindex="-1" aria-labelledby="myModalLabel" aria-hidden="true"
-        style="display: none;">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="myModalLabel">Approve Import</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"> </button>
-                </div>
-                <form action="{{ route('imports.approve', $import->id) }}" method="get">
-                    @csrf
-                    <div class="modal-body">
-                        <div class="form-group mt-2">
-                            <label for="car_expense">Car Expense (Dubai)</label>
-                            <input type="number" step="any" name="car_expense" required id="car_expense"
-                                class="form-control">
-                        </div>
-                        <div class="form-group mt-2">
-                            <label for="bike_expense">Bike Expense (Dubai)</label>
-                            <input type="number" step="any" name="bike_expense" required id="bike_expense"
-                                class="form-control">
-                        </div>
-                        <div class="form-group mt-2">
-                            <label for="parts_expense">Parts Expense (Dubai)</label>
-                            <input type="number" step="any" name="parts_expense" required id="parts_expense"
-                                class="form-control">
-                        </div>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-light" data-bs-dismiss="modal">Close</button>
-                        <button type="submit" class="btn btn-primary">Continue</button>
-                    </div>
-                </form>
-            </div><!-- /.modal-content -->
-        </div><!-- /.modal-dialog -->
-    </div><!-- /.modal -->
 @endsection
 
 @section('page-css')
