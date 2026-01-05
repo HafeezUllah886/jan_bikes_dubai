@@ -16,6 +16,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Imports\PurchasesImport;
 use App\Models\auctions;
+use App\Models\parts_purchase;
 use App\Models\yards;
 use Maatwebsite\Excel\Facades\Excel;
 
@@ -29,16 +30,13 @@ class PartsPurchaseController extends Controller
     {
         $start = $request->start ?? firstDayOfMonth();
         $end = $request->end ?? lastDayOfMonth();
-        $status = $request->status ?? 'Available';
+       
 
-        $purchases = purchase::whereBetween("date", [$start, $end])->orderby('id', 'desc');
-        if($status != 'All')
-        {
-            $purchases->where('status', $status);
-        }
+        $purchases = parts_purchase::whereBetween("date", [$start, $end])->orderby('id', 'desc');
+       
         $purchases = $purchases->get();
 
-        return view('parts_purchase.index', compact('purchases', 'start', 'end', 'status'));
+        return view('parts_purchase.index', compact('purchases', 'start', 'end'));
     }
 
     public function available()

@@ -88,6 +88,24 @@
                     </div>
                 </li>
                 <li class="nav-item">
+                    <a class="nav-link menu-link" href="#part_purchase" data-bs-toggle="collapse" role="button"
+                        aria-expanded="false" aria-controls="sidebarApps">
+                        <i class="ri-shopping-cart-line"></i><span data-key="t-apps">Parts Purchase</span>
+                    </a>
+                    <div class="collapse menu-dropdown" id="part_purchase">
+                        <ul class="nav nav-sm flex-column">
+                            <li class="nav-item">
+                                <a onclick="newWindow('{{ route('part_purchase.create') }}')" class="nav-link"
+                                    data-key="t-chat">Create Purchase</a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="{{ route('part_purchase.index', ['start' => firstDayOfMonth(), 'end' => now()->toDateString()]) }}"
+                                    class="nav-link" data-key="t-chat"> Purchase History </a>
+                            </li>
+                        </ul>
+                    </div>
+                </li>
+                <li class="nav-item">
                     <a class="nav-link menu-link" href="#sale" data-bs-toggle="collapse" role="button"
                         aria-expanded="false" aria-controls="sidebarApps">
                         <i class="ri-shopping-cart-line"></i><span data-key="t-apps">Sale</span>

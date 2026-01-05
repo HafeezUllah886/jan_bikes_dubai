@@ -25,7 +25,7 @@
             </form>
             <div class="card">
                 <div class="card-header d-flex justify-content-between">
-                    <h3>Purchases</h3>
+                    <h3>Parts Purchases</h3>
                 </div>
                 <div class="card-body">
                     @if ($errors->any())
@@ -42,10 +42,9 @@
                         <thead>
                             <th>#</th>
                             <th>Date</th>
-                            <th>Chassis No.</th>
                             <th>Description</th>
-                            <th>Net Cost</th>
-                            <th>Status</th>
+                            <th>Qty</th>
+                            <th>Cost / Piece</th>
                             <th>Action</th>
                         </thead>
                         <tbody>
@@ -53,10 +52,9 @@
                                 <tr>
                                     <td>{{ $key + 1 }}</td>
                                     <td>{{ date('d M Y', strtotime($purchase->date)) }}</td>
-                                    <td>{{ $purchase->chassis }}</td>
-                                    <td>{{ $purchase->model }} | {{ $purchase->company }} | {{ $purchase->color }} </td>
+                                    <td>{{ $purchase->description }}</td>
+                                    <td>{{ $purchase->qty }}</td>
                                     <td>{{ $purchase->total }}</td>
-                                    <td>{{ $purchase->status }}</td>
                                     <td>
                                         <div class="dropdown">
                                             <button class="btn btn-soft-secondary btn-sm dropdown" type="button"

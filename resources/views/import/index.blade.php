@@ -134,14 +134,4 @@
     <script src="{{ asset('assets/libs/datatable/pdfmake.min.js') }}"></script>
     <script src="{{ asset('assets/libs/datatable/jszip.min.js') }}"></script>
     <script src="{{ asset('assets/js/pages/datatables.init.js') }}"></script>
-    <script>
-        $(document).ready(function() {
-            $('#export-btn').click(function() {
-                var start = $('#start').val();
-                var end = $('#end').val();
-                var url = '{{ route('purchases.export') }}' + '?start=' + start + '&end=' + end;
-                window.open(url, '_blank');
-            });
-        });
-    </script>
 @endsection
