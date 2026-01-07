@@ -70,6 +70,10 @@
                                                     $expensePerBikeDubai = 0;
                                                     $expensePerPartDubai = 0;
 
+                                                    $total_cars = 0;
+                                                    $total_bikes = 0;
+                                                    $total_parts = 0;
+
                                                     if ($import->cars->where('type', 'Car')->count() > 0) {
                                                         $car_expenses = $import->car_expenses;
                                                         $total_cars = $import->cars->where('type', 'Car')->count();
