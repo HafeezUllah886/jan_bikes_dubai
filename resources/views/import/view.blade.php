@@ -61,18 +61,23 @@
                                         </thead>
                                         <tbody>
                                             @php
-                                                $car_expenses = $import->car_expenses;
-                                                $bike_expenses = $import->bike_expenses;
-                                                $part_expenses = $import->part_expenses;
 
-                                                $total_cars = $import->cars->where('type', 'Car')->count();
-                                                $total_bikes = $import->cars->where('type', 'Bike')->count();
-                                                $total_parts = $import->parts->sum('qty');
+                                                if ($import->cars->count() > 0) {
+                                                    $car_expenses = $import->car_expenses;
+                                                    $bike_expenses = $import->bike_expenses;
 
-                                                $expensePerCar = $car_expenses / $total_cars;
-                                                $expensePerBike = $bike_expenses / $total_bikes;
-                                                $expensePerPart = $part_expenses / $total_parts;
+                                                    $total_cars = $import->cars->where('type', 'Car')->count();
+                                                    $total_bikes = $import->cars->where('type', 'Bike')->count();
 
+                                                    $expensePerCar = $car_expenses / $total_cars;
+                                                    $expensePerBike = $bike_expenses / $total_bikes;
+                                                }
+
+                                                if ($import->parts->count() > 0) {
+                                                    $part_expenses = $import->part_expenses;
+                                                    $total_parts = $import->parts->sum('qty');
+                                                    $expensePerPart = $part_expenses / $total_parts;
+                                                }
                                             @endphp
                                             @foreach ($import->cars as $car)
                                                 @if ($car->type == 'Car')
