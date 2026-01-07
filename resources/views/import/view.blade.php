@@ -61,15 +61,22 @@
                                         </thead>
                                         <tbody>
                                             @php
+                                                $car_expenses = 0;
+                                                $bike_expenses = 0;
+                                                $part_expenses = 0;
 
-                                                if ($import->cars->count() > 0) {
+                                                if ($import->cars->where('type', 'Car')->count() > 0) {
                                                     $car_expenses = $import->car_expenses;
-                                                    $bike_expenses = $import->bike_expenses;
 
                                                     $total_cars = $import->cars->where('type', 'Car')->count();
-                                                    $total_bikes = $import->cars->where('type', 'Bike')->count();
 
                                                     $expensePerCar = $car_expenses / $total_cars;
+                                                }
+                                                if ($import->cars->where('type', 'Bike')->count() > 0) {
+                                                    $bike_expenses = $import->bike_expenses;
+
+                                                    $total_bikes = $import->cars->where('type', 'Bike')->count();
+
                                                     $expensePerBike = $bike_expenses / $total_bikes;
                                                 }
 
