@@ -58,21 +58,36 @@
                                             </thead>
                                             <tbody>
                                                 @php
-                                                    $car_expenses = $import->car_expenses;
-                                                    $bike_expenses = $import->bike_expenses;
-                                                    $part_expenses = $import->part_expenses;
+                                                    $car_expenses = 0;
+                                                    $bike_expenses = 0;
+                                                    $part_expenses = 0;
 
-                                                    $total_cars = $import->cars->where('type', 'Car')->count();
-                                                    $total_bikes = $import->cars->where('type', 'Bike')->count();
-                                                    $total_parts = $import->parts->sum('qty');
+                                                    $expensePerCarJapan = 0;
+                                                    $expensePerBikeJapan = 0;
+                                                    $expensePerPartJapan = 0;
 
-                                                    $expensePerCarJapan = $car_expenses / $total_cars;
-                                                    $expensePerBikeJapan = $bike_expenses / $total_bikes;
-                                                    $expensePerPartJapan = $part_expenses / $total_parts;
+                                                    $expensePerCarDubai = 0;
+                                                    $expensePerBikeDubai = 0;
+                                                    $expensePerPartDubai = 0;
 
-                                                    $expensePerCarDubai = $car_expense_dubai / $total_cars;
-                                                    $expensePerBikeDubai = $bike_expense_dubai / $total_bikes;
-                                                    $expensePerPartDubai = $part_expense_dubai / $total_parts;
+                                                    if ($import->cars->where('type', 'Car')->count() > 0) {
+                                                        $car_expenses = $import->car_expenses;
+                                                        $total_cars = $import->cars->where('type', 'Car')->count();
+                                                        $expensePerCarJapan = $car_expenses / $total_cars;
+                                                        $expensePerCarDubai = $car_expense_dubai / $total_cars;
+                                                    }
+                                                    if ($import->cars->where('type', 'Bike')->count() > 0) {
+                                                        $bike_expenses = $import->bike_expenses;
+                                                        $total_bikes = $import->cars->where('type', 'Bike')->count();
+                                                        $expensePerBikeJapan = $bike_expenses / $total_bikes;
+                                                        $expensePerBikeDubai = $bike_expense_dubai / $total_bikes;
+                                                    }
+                                                    if ($import->parts->count() > 0) {
+                                                        $part_expenses = $import->part_expenses;
+                                                        $total_parts = $import->parts->sum('qty');
+                                                        $expensePerPartJapan = $part_expenses / $total_parts;
+                                                        $expensePerPartDubai = $part_expense_dubai / $total_parts;
+                                                    }
 
                                                 @endphp
                                                 @foreach ($import->cars as $car)
