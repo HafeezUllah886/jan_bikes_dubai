@@ -61,9 +61,9 @@
                                         </thead>
                                         <tbody>
                                             @php
-                                                $car_expenses = 0;
-                                                $bike_expenses = 0;
-                                                $part_expenses = 0;
+                                                $expensePerCar = 0;
+                                                $expensePerBike = 0;
+                                                $expensePerPart = 0;
 
                                                 if ($import->cars->where('type', 'Car')->count() > 0) {
                                                     $car_expenses = $import->car_expenses;
