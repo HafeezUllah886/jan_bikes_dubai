@@ -52,7 +52,9 @@ class ImportApprovalController extends Controller
 
             $ref = getRef();
             
-            foreach ($cars as $key => $car) {
+          if($cars)
+          {
+              foreach ($cars as $key => $car) {
                 $car = import_cars::findOrFail($car);
                 purchase::create([
 
@@ -75,6 +77,9 @@ class ImportApprovalController extends Controller
                     'refID' => $ref,
                 ]);
             }
+          }
+          if($parts)
+          {
 
             foreach($parts as $key => $part){
                 $part = import_parts::findOrFail($part);
@@ -91,6 +96,7 @@ class ImportApprovalController extends Controller
                     'import_id' => $id,
                 ]);
             }
+        }
             imports::findOrFail($id)->update([
                 'status' => 'Approved',
             ]);
