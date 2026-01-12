@@ -13,6 +13,7 @@ return new class extends Migration
     {
         Schema::create('parts_purchases', function (Blueprint $table) {
             $table->id();
+            $table->string("inv_no");
             $table->text("description");
             $table->float("qty");
             $table->float("price");
@@ -24,7 +25,8 @@ return new class extends Migration
             $table->string("status")->default("Available");
             $table->string("purchase_type")->default("Import");
             $table->bigInteger('refID');
-            $table->bigInteger('import_id');
+            $table->bigInteger('import_id')->nullable();
+            $table->foreignId('vendor_id')->constrained('accounts')->cascadeOnDelete();
             $table->timestamps();
         });
     }

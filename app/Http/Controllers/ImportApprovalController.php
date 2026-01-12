@@ -51,13 +51,17 @@ class ImportApprovalController extends Controller
             $parts = $request->part_id;
 
             $ref = getRef();
+
+            $import = imports::findOrFail($id);
+            $total = 0;
             
           if($cars)
           {
               foreach ($cars as $key => $car) {
                 $car = import_cars::findOrFail($car);
+                $total += $request->car_net_cost[$key];
                 purchase::create([
-
+                    'inv_no' => $import->inv_no,
                     'meter_type' => $car->meter_type,
                     'company' => $car->company,
                     'model' => $car->model,
@@ -75,6 +79,7 @@ class ImportApprovalController extends Controller
                     'purchase_type' => "Import",
                     'import_id' => $id,
                     'refID' => $ref,
+                    'vendor_id' => 2,
                 ]);
             }
           }
@@ -83,7 +88,9 @@ class ImportApprovalController extends Controller
 
             foreach($parts as $key => $part){
                 $part = import_parts::findOrFail($part);
+                $total += $request->part_net_cost[$key];
                 parts_purchase::create([
+                    'inv_no' => $import->inv_no,
                     'description' => $part->part_name,
                     'qty' => $part->qty,
                     'price' => $request->part_price[$key],
@@ -94,9 +101,12 @@ class ImportApprovalController extends Controller
                     'purchase_type' => "Import",
                     'refID' => $ref,
                     'import_id' => $id,
+                    'vendor_id' => 2,
                 ]);
             }
         }
+
+            createTransaction(2,now(),0,$total,'Pending Amount of Inv No. '.$import->inv_no,$ref);
             imports::findOrFail($id)->update([
                 'status' => 'Approved',
             ]);

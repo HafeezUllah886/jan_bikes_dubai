@@ -4,18 +4,31 @@
         <div class="col-12">
             <form>
                 <div class="row">
-                    <div class="col-md-5">
+                    <div class="col-md-4">
                         <div class="input-group mb-3">
                             <span class="input-group-text" id="basic-addon1">From</span>
-                            <input type="date" class="form-control" id="start" placeholder="Username" name="start"
+                            <input type="date" class="form-control" placeholder="Username" name="start"
                                 value="{{ $start }}" aria-label="Username" aria-describedby="basic-addon1">
                         </div>
                     </div>
-                    <div class="col-md-5">
+                    <div class="col-md-4">
                         <div class="input-group mb-3">
                             <span class="input-group-text" id="basic-addon1">To</span>
-                            <input type="date" class="form-control" id="end" placeholder="Username" name="end"
+                            <input type="date" class="form-control" placeholder="Username" name="end"
                                 value="{{ $end }}" aria-label="Username" aria-describedby="basic-addon1">
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <div class="input-group mb-3">
+                            <span class="input-group-text" id="basic-addon1">Inv No</span>
+                            <select name="inv_no" id="inv_no" class="form-control">
+                                <option value="">Select Inv No</option>
+                                @foreach ($invoices as $invoice)
+                                    <option value="{{ $invoice->inv_no }}"
+                                        {{ $invoice->inv_no == $inv_no ? 'selected' : '' }}>
+                                        {{ $invoice->inv_no }}</option>
+                                @endforeach
+                            </select>
                         </div>
                     </div>
                     <div class="col-md-2">
@@ -26,6 +39,8 @@
             <div class="card">
                 <div class="card-header d-flex justify-content-between">
                     <h3>Purchases</h3>
+                    <a href="{{ route('purchase.create') }}" type="button" class="btn btn-primary ">Create
+                        New</a>
                 </div>
                 <div class="card-body">
                     @if ($errors->any())
@@ -42,7 +57,9 @@
                         <thead>
                             <th>#</th>
                             <th>Date</th>
+                            <th>Inv No.</th>
                             <th>Chassis No.</th>
+                            <th>Engine No.</th>
                             <th>Description</th>
                             <th>Net Cost</th>
                             <th>Status</th>
@@ -53,7 +70,9 @@
                                 <tr>
                                     <td>{{ $key + 1 }}</td>
                                     <td>{{ date('d M Y', strtotime($purchase->date)) }}</td>
+                                    <td>{{ $purchase->inv_no }}</td>
                                     <td>{{ $purchase->chassis }}</td>
+                                    <td>{{ $purchase->engine }}</td>
                                     <td>{{ $purchase->model }} | {{ $purchase->company }} | {{ $purchase->color }} </td>
                                     <td>{{ $purchase->total }}</td>
                                     <td>{{ $purchase->status }}</td>

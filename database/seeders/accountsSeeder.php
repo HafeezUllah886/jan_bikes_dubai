@@ -20,7 +20,7 @@ class accountsSeeder extends Seeder
         ]);
 
         accounts::create([
-            'title' => "Import",
+            'title' => "Jan Brothers",
             'type' => "Vendor",
             'address' => "",
             'contact' => "",

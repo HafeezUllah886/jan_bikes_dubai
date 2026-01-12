@@ -13,6 +13,7 @@ return new class extends Migration
     {
         Schema::create('purchases', function (Blueprint $table) {
             $table->id();
+            $table->string("inv_no")->nullable();
             $table->string("meter_type")->nullable();
             $table->string("company")->nullable();
             $table->string("model")->nullable();
@@ -28,8 +29,9 @@ return new class extends Migration
             $table->string("status")->default("Available");
             $table->string("type")->default("Bike");
             $table->string("purchase_type")->default("Import");
-            $table->bigInteger('import_id');
+            $table->bigInteger('import_id')->nullable();
             $table->bigInteger('refID');
+            $table->foreignId('vendor_id')->constrained('accounts')->cascadeOnDelete();
             $table->timestamps();
         });
     }

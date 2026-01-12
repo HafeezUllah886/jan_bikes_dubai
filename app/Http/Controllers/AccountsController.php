@@ -99,39 +99,21 @@ class AccountsController extends Controller
     {
         $account = accounts::find($id);
 
-        $transactions = transactions::where('accountID', $id)->whereBetween('date', [$from, $to])->orderBy('date', 'asc')->get();
+        $transactions = transactions::where('account_id', $id)->whereBetween('date', [$from, $to])->orderBy('date', 'asc')->get();
 
-        $pre_cr = transactions::where('accountID', $id)->whereDate('date', '<', $from)->sum('cr');
-        $pre_db = transactions::where('accountID', $id)->whereDate('date', '<', $from)->sum('db');
+        $pre_cr = transactions::where('account_id', $id)->whereDate('date', '<', $from)->sum('cr');
+        $pre_db = transactions::where('account_id', $id)->whereDate('date', '<', $from)->sum('db');
         $pre_balance = $pre_cr - $pre_db;
 
-        $cur_cr = transactions::where('accountID', $id)->sum('cr');
-        $cur_db = transactions::where('accountID', $id)->sum('db');
+        $cur_cr = transactions::where('account_id', $id)->sum('cr');
+        $cur_db = transactions::where('account_id', $id)->sum('db');
 
         $cur_balance = $cur_cr - $cur_db;
 
         return view('Finance.accounts.statment', compact('account', 'transactions', 'pre_balance', 'cur_balance', 'from', 'to'));
     }
 
-    public function pdf($id, $from, $to)
-    {
-        $account = accounts::find($id);
-
-        $transactions = transactions::where('accountID', $id)->whereBetween('date', [$from, $to])->get();
-
-        $pre_cr = transactions::where('accountID', $id)->whereDate('date', '<', $from)->sum('cr');
-        $pre_db = transactions::where('accountID', $id)->whereDate('date', '<', $from)->sum('db');
-        $pre_balance = $pre_cr - $pre_db;
-
-        $cur_cr = transactions::where('accountID', $id)->sum('cr');
-        $cur_db = transactions::where('accountID', $id)->sum('db');
-
-        $cur_balance = $cur_cr - $cur_db;
-        $pdf = Pdf::loadview('Finance.accounts.pdf', compact('account', 'transactions', 'pre_balance', 'cur_balance', 'from', 'to'));
-    return $pdf->download("Account Statement - $account->id.pdf");
-    }
-
-
+    
     /**
      * Show the form for editing the specified resource.
      */

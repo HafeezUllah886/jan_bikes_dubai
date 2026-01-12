@@ -29,26 +29,16 @@ class PurchaseController extends Controller
     {
         $start = $request->start ?? firstDayOfMonth();
         $end = $request->end ?? lastDayOfMonth();
-        $status = $request->status ?? 'Available';
+        $inv_no = $request->inv_no ?? null;
+        
+         if($inv_no){
+            $purchases = purchase::where('inv_no', $inv_no)->get();
+         }else{
+            $purchases = purchase::whereBetween('date', [$start, $end])->get();
+         }
+        $invoices = purchase::where('status', 'Available')->select('inv_no')->distinct()->get();
 
-        $purchases = purchase::whereBetween("date", [$start, $end])->orderby('id', 'desc');
-        if($status != 'All')
-        {
-            $purchases->where('status', $status);
-        }
-        $purchases = $purchases->get();
-
-        return view('purchase.index', compact('purchases', 'start', 'end', 'status'));
-    }
-
-    public function available()
-    {
-    
-        $purchases = purchase::where('status', 'Available')->orderby('id', 'desc');
-       
-        $purchases = $purchases->get();
-
-        return view('purchase.available', compact('purchases'));
+        return view('purchase.index', compact('purchases', 'start', 'end', 'inv_no', 'invoices'));
     }
 
     /**
@@ -56,14 +46,8 @@ class PurchaseController extends Controller
      */
     public function create()
     {
-        $yards = yards::all();
-        $auctions = auctions::all();
-
-        $lastpurchase = purchase::orderby('id', 'desc')->first();
-
-        $rate = purchase::latest()->first()->rate ?? 0;
-        $accounts = accounts::bank()->get();
-        return view('purchase.create', compact('auctions', 'yards', 'lastpurchase', 'rate', 'accounts'));
+        $vendors = accounts::vendor()->get();
+        return view('purchase.create', compact('vendors'));
     }
 
     /**
@@ -85,31 +69,27 @@ class PurchaseController extends Controller
             $ref = getRef();
             $purchase = purchase::create(
                 [
-                    "account_id"            =>  $request->account,
-                    "meter_type"            =>  $request->meter_type,
-                    "company"               =>  $request->company,
-                    "model"                 =>  $request->model,
-                    "color"                 =>  $request->color,
-                    "chassis"               =>  $request->chassis,
-                    "engine"                =>  $request->engine,
-                    "auction"               =>  $request->auction,
-                    "yard"                  =>  $request->yard,
-                    "date"                  =>  $request->date,
-                    "price"                 =>  $request->price,
-                    "ptax"                  =>  $request->ptax,
-                    "tax"                   =>  $request->tax,
-                    "rikso"                 =>  $request->rikso,
-                    "auction_fee"           =>  $request->auction_fee,
-                    "total"                 =>  $request->total,
-                    "rate"                  =>  $request->rate,
-                    "net_dirham"            =>  $request->net_dirham,
-                    "notes"                 =>  $request->notes,
-                    "type"                  =>  $request->type,
-                    "refID"                 =>  $ref,
+                    "inv_no"        =>  $request->invoice_no,
+                    "meter_type"    =>  $request->meter_type,
+                    "company"       =>  $request->company,
+                    "model"         =>  $request->model,
+                    "color"         =>  $request->color,
+                    "chassis"       =>  $request->chassis,
+                    "engine"        =>  $request->engine,
+                    "date"          =>  $request->date,
+                    "price"         =>  $request->price,
+                    "expense"       =>  $request->expenses,
+                    "total"         =>  $request->total_cost,
+                    "sale_price"    =>  $request->sale_price,
+                    "notes"         =>  $request->notes,
+                    "type"          =>  $request->type,
+                    "purchase_type" =>  "Purchase",
+                    "refID"         =>  $ref,
+                    "vendor_id"     =>  $request->vendor,
                 ]
             );
 
-            createTransaction($request->account, $request->date, 0, $request->net_dirham, "Payment of Purchase ID $purchase->id - Chassis No. $request->chassis", $ref);
+            createTransaction($request->vendor,$request->date,0,$request->total_cost, "Pending Amount of Purchase Chassis No. ".$request->chassis,$ref);
 
             DB::commit();
             return to_route('purchase.show', $purchase->id)->with('success', "Purchase Created");

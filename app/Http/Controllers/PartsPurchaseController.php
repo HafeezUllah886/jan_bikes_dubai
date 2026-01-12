@@ -30,13 +30,16 @@ class PartsPurchaseController extends Controller
     {
         $start = $request->start ?? firstDayOfMonth();
         $end = $request->end ?? lastDayOfMonth();
-       
+        $inv_no = $request->inv_no ?? null;
+        
+         if($inv_no){
+            $purchases = parts_purchase::where('inv_no', $inv_no)->get();
+         }else{
+            $purchases = parts_purchase::whereBetween('date', [$start, $end])->get();
+         }
+        $invoices = parts_purchase::where('status', 'Available')->select('inv_no')->distinct()->get();
 
-        $purchases = parts_purchase::whereBetween("date", [$start, $end])->orderby('id', 'desc');
-       
-        $purchases = $purchases->get();
-
-        return view('parts_purchase.index', compact('purchases', 'start', 'end'));
+        return view('parts_purchase.index', compact('purchases', 'start', 'end', 'inv_no', 'invoices'));
     }
 
     public function available()
