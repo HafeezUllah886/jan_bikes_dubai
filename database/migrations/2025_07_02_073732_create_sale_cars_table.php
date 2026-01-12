@@ -17,8 +17,11 @@ return new class extends Migration
             $table->foreignId('purchase_id')->constrained('purchases')->cascadeOnDelete();
             $table->string('type');
             $table->string('chassis');
+            $table->float('pprice');           
             $table->float('price');           
+            $table->float('profit');           
             $table->date('date');           
+            $table->string('profit_type');           
             $table->timestamps();
         });
     }

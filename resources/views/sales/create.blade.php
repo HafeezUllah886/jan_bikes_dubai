@@ -10,8 +10,8 @@
                                 <div class="col-6">
                                     <h3> Create Sale </h3>
                                 </div>
-                                <div class="col-6 d-flex flex-row-reverse"><a href="{{ route('sale.index') }}"
-                                        class="btn btn-danger">Close</a></div>
+                                <div class="col-6 d-flex flex-row-reverse"><button onclick="window.close()"
+                                        class="btn btn-danger">Close</button></div>
                             </div>
                         </div>
                     </div>
@@ -20,173 +20,134 @@
                     <form action="{{ route('sale.store') }}" method="post">
                         @csrf
                         <div class="row">
-                            <div class="col-6">
-                                <h4>Cars</h4>
-                            </div>
-                            
-                            <div class="row">
-                                <div class="col-12">
-                                    <table class="table table-striped table-hover">
-                                        <thead>
-                                            <th width="200px">Customer</th>
-                                            <th width="">Chassis</th>
-                                            <th width="">Description</th>
-                                            <th width="">Grade</th>
-                                            <th width="" class="text-center">P-Price</th>
-                                            <th width="" class="text-center">Expense</th>
-                                            <th width="" class="text-center">Net Cost</th>
-                                            <th width="" class="text-center">Sale Price</th>
-                                            <th width="" class="text-center">Profit</th>
-                                        </thead>
-                                        <tbody id="cars_list">
-                                            @foreach ($purchase->cars as $car)
-                                                <tr id="car_{{ $car->id }}">
-                                                    <td>
-                                                        <select name="customer_id[]" id="customer_id" required class="form-control">  
-                                                            <option value="">Select Customer</option>
-                                                            @foreach ($customers as $customer)
-                                                                <option value="{{ $customer->id }}">{{ $customer->title }}</option>
-                                                            @endforeach
-                                                        </select>
-                                                    </td>
-                                                    <td>{{ $car->chassis_no }}</td>
-                                                    <td>{{ $car->maker }} | {{ $car->model }} | {{ $car->year }} | {{ $car->color }} | {{ $car->remarks }}</td>
-                                                    <td>{{ $car->grade }}</td>
-                                                    <td class="text-center"><input type="number" step="any" name="car_pprice[]" id="car_pprice_{{ $car->id }}" readonly value="{{ $car->price_pkr }}" class="form-control text-center"></td>
-                                                    <td class="text-center"><input type="number" step="any" oninput="calculateCarNetCost({{ $car->id }})" name="car_expense[]" id="car_expense_{{ $car->id }}" value="0" class="form-control text-center"></td>
-                                                    <td class="text-center"><input type="number" step="any" name="car_net_cost[]" id="car_net_cost_{{ $car->id }}" readonly value="{{ $car->price_pkr }}" class="form-control text-center"></td>
-                                                    <td><input type="number" step="any" name="car_price[]" oninput="calculateCarNetCost({{ $car->id }})" id="car_price_{{ $car->id }}" value="0" class="form-control text-center"></td>
-                                                    <td><input type="number" step="any" name="profit[]" oninput="calculateCarNetCost({{ $car->id }})" readonly id="profit_{{ $car->id }}" value="0" class="form-control text-center"></td>
-                                                    <input type="hidden" name="car_id[]" value="{{ $car->id }}">
-                                                </tr>
-                                            @endforeach
-
-                                        </tbody>
-                                        <tfoot>
-                                            <tr>
-                                                <th colspan="4" class="text-end">Total</th>
-                                                <th class="text-end" id="totalCarPPrice">{{ number_format($purchase->cars->sum('price_pkr'), 0) }}</th>
-                                                <th class="text-end" id="totalCarExpense">0.00</th>
-                                                <th class="text-end" id="totalCarNetCost">{{ number_format($purchase->cars->sum('price_pkr'), 0) }}</th>
-                                                <th class="text-end" id="totalCarPrice">0.00</th>
-                                                <th class="text-end" id="totalCarProfit">0.00</th>
-                                            </tr>
-                                        </tfoot>
-                                    </table>
-                                </div>
-                            </div>
-
-                        </div>
-                        <div class="row">
-                            <div class="col-6">
-                                <h4>Parts / Engine Oil</h4>
-                            </div>
-                            <div class="row">
-                                <div class="col-12">
-                                    <table class="table table-striped table-hover">
-                                        <thead>
-                                            <th width="200px">Customer</th>
-                                            <th width="">Description</th>
-                                            <th width="">Grade</th>
-                                            <th width="">Qty</th>
-                                            <th width="" class="text-center">P-Price</th>
-                                            <th width="" class="text-center">Expense</th>
-                                            <th width="" class="text-center">Net Cost</th>
-                                            <th width="" class="text-center">Sale Price</th>
-                                            <th width="" class="text-center">Profit</th>
-                                        </thead>
-                                        <tbody id="parts_list">
-                                            @foreach ($purchase->parts as $part)
+                            <div class="col-lg-6">
+                                <div class="row">
+                                    <div class="col-12">
+                                        <table class="table table-striped table-hover">
+                                            <thead>
+                                                <th width="">Ser</th>
+                                                <th width="">Type</th>
+                                                <th width="">Chassis</th>
+                                                <th class="text-start">Company</th>
+                                                <th class="text-start">Model</th>
+                                                <th width="" class="text-center">Price</th>
+                                                <th width="" class="text-start">Profit</th>
+                                                <th></th>
+                                            </thead>
+                                            <tbody id="products_list">
+                                                @foreach ($products as $key => $product)
+                                                    <tr id="car_row_{{ $product->id }}" class="no-padding">
+                                                        <td class="no-padding text-start"><input type="checkbox"
+                                                                name="car_id[]" id="car_id_{{ $product->id }}"
+                                                                onclick="updateTotal()" value="{{ $product->id }}"> |
+                                                            {{ $key + 1 }}</td>
+                                                        <td class="no-padding">{{ $product->type }}</td>
+                                                        <td class="no-padding">{{ $product->chassis }}</td>
+                                                        <td class="no-padding">{{ $product->company }}</td>
+                                                        <td class="no-padding">{{ $product->model }}</td>
+                                                        <td class="no-padding"><input type="number" name="car_price[]"
+                                                                id="car_price_{{ $product->id }}"
+                                                                class="form-control form-control-sm text-center"
+                                                                value="{{ $product->sale_price }}"></td>
+                                                        <td class="no-padding">
+                                                            <select name="car_profit[]"
+                                                                class="form-control form-control-sm text-center"
+                                                                id="car_profit_{{ $product->id }}">
+                                                                <option value="Both">Both</option>
+                                                                <option value="Only Profit">Only Profit</option>
+                                                                <option value="Only Loss">Only Loss</option>
+                                                            </select>
+                                                        </td>
+                                                    </tr>
+                                                @endforeach
+                                            </tbody>
+                                            <tfoot>
                                                 <tr>
-                                                    <td>
-                                                        <select name="part_customer_id[]" id="customer_id" required class="form-control">  
-                                                            <option value="">Select Customer</option>
-                                                            @foreach ($customers as $customer)
-                                                                <option value="{{ $customer->id }}">{{ $customer->title }}</option>
-                                                            @endforeach
-                                                        </select>
-                                                    </td>
-                                                    <td>{{ $part->description }} | {{$part->weight_ltr}}</td>
-                                                    <td>{{ $part->grade }}</td>
-                                                    <td>{{ $part->qty }}</td>
-                                                    <td class="text-center"><input type="number" step="any" name="part_pprice[]" id="part_pprice_{{ $part->id }}" readonly value="{{ $part->price_pkr }}" class="form-control text-center"></td>
-                                                    <td class="text-center"><input type="number" step="any" name="part_expense[]" oninput="calculatePartsNetCost({{ $part->id }})" id="part_expense_{{ $part->id }}" value="0" class="form-control text-center"></td>
-                                                    <td class="text-center"><input type="number" step="any" name="part_net_cost[]" id="part_net_cost_{{ $part->id }}" readonly value="{{ $part->price_pkr }}" class="form-control text-center"></td>
-                                                    <td><input type="number" step="any" name="part_price[]" id="part_price_{{ $part->id }}" oninput="calculatePartsNetCost({{ $part->id }})" value="0" class="form-control text-center"></td>
-                                                    <td><input type="number" step="any" name="part_profit[]" id="part_profit_{{ $part->id }}" readonly oninput="calculatePartsNetCost({{ $part->id }})" value="0" class="form-control text-center"></td>
-                                                    <input type="hidden" name="part_id[]" value="{{ $part->id }}">
+                                                    <th colspan="5" class="text-end no-padding">Total</th>
+                                                    <th class="text-end no-padding" id="totalPrice">
+                                                        {{ number_format($products->sum('total'), 2) }}</th>
+                                                    <th class="no-padding"></th>
                                                 </tr>
-                                            @endforeach
+                                            </tfoot>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-6">
+                                <div class="row">
+                                    <div class="col-12">
+                                        <div class="form-group">
+                                            <label for="part">Parts</label>
+                                            <select name="part" class="selectize2" id="part">
 
-                                        </tbody>
-                                        <tfoot>
-                                            <tr>
-                                                <th colspan="4" class="text-end">Total</th>
-                                                <th class="text-end" id="totalPartsPPrice">{{ number_format($purchase->parts->sum('price_pkr'), 0) }}</th>
-                                                <th class="text-end" id="totalPartsExpense">0.00</th>
-                                                <th class="text-end" id="totalPartsNetCost">{{ number_format($purchase->parts->sum('price_pkr'), 0) }}</th>
-                                                <th class="text-end" id="totalPartsPrice">0.00</th>
-                                                <th class="text-end" id="totalPartsProfit">0.00</th>
-                                            </tr>
-                                        </tfoot>
-                                    </table>
+                                                <option value="">Select Part</option>
+                                                @foreach ($parts as $part)
+                                                    <option value="{{ $part->id }}">{{ $part->description }} |
+                                                        {{ $part->avail_qty }}</option>
+                                                @endforeach
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-12">
+                                        <table class="table table-striped table-hover">
+                                            <thead>
+                                                <th width="30%">Description</th>
+                                                <th width="" class="text-center">Qty</th>
+                                                <th width="" class="text-center">Price</th>
+                                                <th width="" class="text-center">Amount</th>
+                                                <th width="" class="text-start">Profit</th>
+                                                <th></th>
+                                            </thead>
+                                            <tbody id="parts_list"></tbody>
+                                            <tfoot>
+                                                <tr>
+                                                    <th colspan="3" class="text-end no-padding">Total</th>
+                                                    <th class="text-center no-padding" id="totalPartPrice">0.00</th>
+                                                    <th class="text-start no-padding"></th>
+                                                </tr>
+                                            </tfoot>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-2 mt-2">
+                                <div class="form-group">
+                                    <label for="rate">Total </label>
+                                    <input type="number" class="form-control" step="any" name="net" readonly
+                                        id="net" value="1">
+                                </div>
+                            </div>
+                            <div class="col-3 mt-2">
+                                <div class="form-group ">
+                                    <label for="customer">Customer</label>
+                                    <select name="customer" required class="selectize1" id="customer">
+                                        <option value=""></option>
+                                        @foreach ($customers as $customer)
+                                            <option value="{{ $customer->id }}">{{ $customer->title }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-2 mt-2">
+                                <div class="form-group">
+                                    <label for="date">Date</label>
+                                    <input type="date" class="form-control" required name="date"
+                                        value="{{ date('Y-m-d') }}">
                                 </div>
                             </div>
 
-                        </div>
-                        <div class="col-12">
-                            <div class="row">
-                                <div class="col-2">
-                                    <p class="text-muted mb-2 text-uppercase fw-semibold">Container #</p>
-                                    <h5 class="fs-14 mb-0">{{$purchase->c_no}}</h5>
-                                    <input type="hidden" name="purchase_id" value="{{$purchase->id}}">
-                                </div>
-                                <div class="col-2">
-                                    <p class="text-muted mb-2 text-uppercase fw-semibold">BL #</p>
-                                    <h5 class="fs-14 mb-0">{{$purchase->bl_no}}</h5>
-                                </div>
-                                <div class="col-2">
-                                    <p class="text-muted mb-2 text-uppercase fw-semibold">Total Cost</p>
-                                    <h5 class="fs-14 mb-0"> <span id="totalCost">{{number_format($purchase->net_amount, 0)}}</span> </h5>
-                                </div>
-                                <div class="col-2">
-                                    <p class="text-muted mb-2 text-uppercase fw-semibold">Total Sale</p>
-                                    <h5 class="fs-14 mb-0"><span id="totalSalePrice">0</span></h5>
-                                    <input type="hidden" name="total" id="total_amount">
-                                </div>
-                                <div class="col-2">
-                                    <p class="text-muted mb-2 text-uppercase fw-semibold">Profit / Loose</p>
-                                    <h5 class="fs-14 mb-0" id="profit_loose">0</h5>
-                                </div>
+                            <div class="col-12 mt-2">
+                                <button type="submit" class="btn btn-primary w-100">Create Sale</button>
                             </div>
                         </div>
-
-                       <div class="row">
-                        <div class="col-3 mt-2">
-                            <div class="form-group">
-                                <label for="date">Date</label>
-                                <input type="date" class="form-control" required name="date"
-                                    value="{{ date('Y-m-d') }}">
-                            </div>
-                        </div>
-                        <div class="col-6 mt-2">
-                            <div class="form-group">
-                                <label for="notes">Notes</label>
-                                <input type="text" class="form-control" name="notes">
-                            </div>
-                        </div>
-
-                       </div>
-                        <div class="col-12 mt-2">
-                            <button type="submit" class="btn btn-primary w-100">Create Sale</button>
-                        </div>
+                    </form>
                 </div>
-                </form>
             </div>
+            <!--end card-->
         </div>
-        <!--end card-->
-    </div>
-    <!--end col-->
+        <!--end col-->
     </div>
     <!--end row-->
 @endsection
@@ -198,124 +159,146 @@
             padding: 5px 5px !important;
         }
     </style>
+
+    <meta name="csrf-token" content="{{ csrf_token() }}">
 @endsection
 @section('page-js')
     <script src="{{ asset('assets/libs/selectize/selectize.min.js') }}"></script>
     <script>
-      
-        $(document).ready(function() {
-            // Initialize any existing select elements on page load
-            $('select.selectize').selectize();
+        $(".selectize").selectize({
+            onChange: function(value) {
+                if (!value.length) return;
+                if (value != 0) {
+                    getSingleProduct(value);
+                    this.clear();
+                    this.focus();
+                }
+            },
         });
-       
-        function calculateCarNetCost(id) {
-            var price = parseFloat($('#car_pprice_' + id).val());
-            var expense = parseFloat($('#car_expense_' + id).val());
-            var net_cost = price + expense;
-            var sale_price = parseFloat($('#car_price_' + id).val());
-            var profit = sale_price - net_cost;
-            $('#car_net_cost_' + id).val(net_cost.toFixed(2));
-            $('#profit_' + id).val(profit.toFixed(2));
-            calculateTotal();
+        $(".selectize2").selectize({
+            onChange: function(value) {
+                if (!value.length) return;
+                if (value != 0) {
+                    getSinglePart(value);
+                    this.clear();
+                    this.focus();
+                }
+            },
+        });
+
+        function checkproductCheckBox() {
+            var checked = $('input[name="car_id[]"]:checked').length;
+            $("input[id^='car_id_']").each(function() {
+                updateTotal();
+            });
         }
 
-         function calculatePartsNetCost(id) {
-            var price = parseFloat($('#part_pprice_' + id).val());
-            var expense = parseFloat($('#part_expense_' + id).val());
-            var net_cost = price + expense;
-            var sale_price = parseFloat($('#part_price_' + id).val());
-            var profit = sale_price - net_cost;
-            $('#part_net_cost_' + id).val(net_cost.toFixed(2));
-            $('#part_profit_' + id).val(profit.toFixed(2));
-            calculateTotal();
-        }
+        function updateTotal() {
 
-          function calculateTotal() {
+            var totalPrice = 0;
 
-            var totalCarExpense = 0;
-            $('#cars_list tr').each(function() {
-                var price = parseFloat($(this).find('input[name="car_expense[]"]').val());
-                if (!isNaN(price)) {
-                    totalCarExpense += price;
-                }
+            // loop inside the checked checkboxes
+            $('input[name="car_id[]"]:checked').each(function() {
+                var id = $(this).val();
+                var price = parseFloat($("#car_price_" + id).val());
+                totalPrice += price;
             });
-            $('#totalCarExpense').text(totalCarExpense.toFixed(2));
-            
 
-            var totalCarCost = 0;
-            $('#cars_list tr').each(function() {
-                var cost = parseFloat($(this).find('input[name="car_net_cost[]"]').val());
-                if (!isNaN(cost)) {
-                    totalCarCost += cost;
-                }
-            });
-            $('#totalCarNetCost').text(totalCarCost.toFixed(2));
+            $("#totalPrice").html(totalPrice.toFixed(2));
 
-            var totalCarPrice = 0;
-            $('#cars_list tr').each(function() {
-                var price = parseFloat($(this).find('input[name="car_price[]"]').val());
-                if (!isNaN(price)) {
-                    totalCarPrice += price;
-                }
-            });
-            $('#totalCarPrice').text(totalCarPrice.toFixed(2));
-            
-            var totalPartsExpense = 0;
-            $('#parts_list tr').each(function() {
-                var expense = parseFloat($(this).find('input[name="part_expense[]"]').val());
-                if (!isNaN(expense)) {
-                    totalPartsExpense += expense;
-                }
-            });
-            $('#totalPartsExpense').text(totalPartsExpense.toFixed(2));
-            
-            var totalcarProfit = 0;
-            $('#cars_list tr').each(function() {
-                var profit = parseFloat($(this).find('input[name="profit[]"]').val());
-                if (!isNaN(profit)) {
-                    totalcarProfit += profit;
-                }
-            });
-            $('#totalCarProfit').text(totalcarProfit.toFixed(2));
-            
-            var totalPartsCost = 0;
-            $('#parts_list tr').each(function() {
-                var cost = parseFloat($(this).find('input[name="part_net_cost[]"]').val());
-                if (!isNaN(cost)) {
-                    totalPartsCost += cost;
-                }
-            });
-            $('#totalPartsNetCost').text(totalPartsCost.toFixed(2));
 
-            var totalPartsPrice = 0;
-            $('#parts_list tr').each(function() {
-                var price = parseFloat($(this).find('input[name="part_price[]"]').val());
-                if (!isNaN(price)) {
-                    totalPartsPrice += price;
-                }
+            var total_part_price = 0;
+            $("input[id^='part_amount_']").each(function() {
+                var inputId = $(this).attr('id');
+                var inputValue = $(this).val();
+                total_part_price += parseFloat(inputValue);
             });
-            $('#totalPartsPrice').text(totalPartsPrice.toFixed(2));
-            
-            var totalPartsProfit = 0;
-            $('#parts_list tr').each(function() {
-                var price = parseFloat($(this).find('input[name="part_profit[]"]').val());
-                if (!isNaN(price)) {
-                    totalPartsProfit += price;
-                }
-            });
-            $('#totalPartsProfit').text(totalPartsProfit.toFixed(2));
-            
-        
-            var totalCost = parseFloat(totalCarCost + totalPartsCost);
-            var totalSalePrice = parseFloat(totalPartsPrice + totalCarPrice);
 
-            $('#totalCost').text(totalCost.toFixed(2));
-            $('#totalSalePrice').text(totalSalePrice.toFixed(2));
+            $("#totalPartPrice").html(total_part_price.toFixed(2));
 
-            var profit = parseFloat(totalSalePrice - totalCost);
-            $('#profit_loose').text(profit.toFixed(2));
+            var total = totalPrice + total_part_price;
+
+            $("#net").val(total.toFixed(2));
 
         }
-      
+
+        function deleteRow(id) {
+            existingProducts = $.grep(existingProducts, function(value) {
+                return value !== id;
+            });
+            $('#row_' + id).remove();
+
+            updateTotal();
+        }
+
+        var existingParts = [];
+
+        function getSinglePart(id) {
+            $.ajax({
+                url: "{{ url('sale/getpart/') }}/" + id,
+                method: "GET",
+                success: function(part) {
+                    let found = $.grep(existingParts, function(element) {
+                        return element === part.id;
+                    });
+                    if (found.length > 0) {} else {
+                        var id = part.id;
+                        var html = '<tr id="row_' + id + '" class="no-padding">';
+                        html += '<td class="no-padding text-start">' + part.description + '</td>';
+                        html +=
+                            '<td class="no-padding"><input type="number" name="qty[]" required step="any" value="' +
+                            part.qty + '" min="0" max="' + part.qty +
+                            '" class="form-control form-control-sm text-center" oninput="part_amount(' + id +
+                            ')" id="qty_' + id + '"></td>';
+                        html +=
+                            '<td class="no-padding"><input type="number" oninput="part_amount(' + id +
+                            ')" name="part_price[]" required step="any" value="' +
+                            part.sale_price +
+                            '" min="0" class="form-control form-control-sm text-center" id="part_price_' +
+                            id + '"></td>';
+                        html +=
+                            '<td class="no-padding"><input type="number" name="part_amount[]" readonly required step="any" value="' +
+                            part.amount +
+                            '" min="0" class="form-control form-control-sm text-center" id="part_amount_' + id +
+                            '"></td>';
+                        html +=
+                            ' <td class="no-padding"><select name="part_profit[]" class="form-control form-control-sm text-center" id="part_profit_' +
+                            id + '">' +
+                            '<option value="Both">Both</option>' +
+                            '<option value="Only Profit">Only Profit</option>' +
+                            '<option value="Only Loss">Only Loss</option>' +
+                            '</select></td>';
+                        html +=
+                            '<td class="no-padding"> <span class="btn btn-sm btn-danger mt-0" onclick="deleteRow(' +
+                            id + ')">X</span> </td>';
+                        html += '<input type="hidden" name="part_id[]" value="' + id + '">';
+                        html += '</tr>';
+                        $("#parts_list").prepend(html);
+                        part_amount(id);
+                        updateTotal();
+                        existingParts.push(id);
+                    }
+                }
+            });
+        }
+
+        function part_amount(id) {
+            var qty = parseFloat($("#qty_" + id).val());
+            var price = parseFloat($("#part_price_" + id).val());
+            var amount = qty * price;
+            $("#part_amount_" + id).val(amount.toFixed(2));
+            updateTotal();
+        }
+
+        function deletePart(id) {
+
+            existingParts = $.grep(existingParts, function(value) {
+                return value !== id;
+            });
+            $('#row_' + id).remove();
+            updateTotal();
+        }
+
+        $(".selectize1").selectize();
     </script>
 @endsection
