@@ -30,15 +30,21 @@ class PurchaseController extends Controller
         $start = $request->start ?? firstDayOfMonth();
         $end = $request->end ?? lastDayOfMonth();
         $inv_no = $request->inv_no ?? null;
+        $status = $request->status ?? "all";
         
          if($inv_no){
             $purchases = purchase::where('inv_no', $inv_no)->get();
          }else{
-            $purchases = purchase::whereBetween('date', [$start, $end])->get();
+            
+            $purchases = purchase::whereBetween('date', [$start, $end]);
+            if($status != "all"){
+                $purchases = $purchases->where('status', $status);
+            }
+            $purchases = $purchases->get();
          }
         $invoices = purchase::where('status', 'Available')->select('inv_no')->distinct()->get();
 
-        return view('purchase.index', compact('purchases', 'start', 'end', 'inv_no', 'invoices'));
+        return view('purchase.index', compact('purchases', 'start', 'end', 'inv_no', 'invoices', 'status'));
     }
 
     /**
