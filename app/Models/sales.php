@@ -15,12 +15,12 @@ class sales extends Model
 
     public function sale_cars()
     {
-        return $this->hasMany(sale_cars::class);
+        return $this->hasMany(sale_cars::class, 'sale_id');
     }
 
     public function sale_parts()
     {
-        return $this->hasMany(sale_parts::class);
+        return $this->hasMany(sale_parts::class, 'sale_id');
     }
     
 }

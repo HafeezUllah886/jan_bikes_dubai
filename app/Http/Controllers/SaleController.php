@@ -132,9 +132,9 @@ class SaleController extends Controller
      */
     public function show($id)
     {
-        $export = export::find($id);
+        $sale = sales::find($id);
 
-        return view('export.view', compact('export'));
+        return view('sales.view', compact('sale'));
     }
 
     /**
