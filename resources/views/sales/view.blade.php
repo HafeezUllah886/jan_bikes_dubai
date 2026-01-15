@@ -84,7 +84,7 @@
                                     </table><!--end table-->
                                 </div>
                             @endif
-                            @if ($sale->sale_cars->count() > 0)
+                            @if ($sale->sale_parts->count() > 0)
                                 <h6 class="mt-3">Parts</h6>
                                 <div class="table-responsive">
 

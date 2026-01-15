@@ -4,18 +4,29 @@
         <div class="col-12">
             <form>
                 <div class="row g-1">
-                    <div class="col-md-5">
+                    <div class="col-md-4">
                         <div class="input-group mb-3">
                             <span class="input-group-text" id="basic-addon1">From</span>
                             <input type="date" class="form-control" placeholder="Username" name="from"
                                 value="{{ $from }}" aria-label="Username" aria-describedby="basic-addon1">
                         </div>
                     </div>
-                    <div class="col-md-5">
+                    <div class="col-md-4">
                         <div class="input-group mb-3">
                             <span class="input-group-text" id="basic-addon1">To</span>
                             <input type="date" class="form-control" placeholder="Username" name="to"
                                 value="{{ $to }}" aria-label="Username" aria-describedby="basic-addon1">
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <div class="input-group mb-3">
+                            <span class="input-group-text" id="basic-addon1">Status</span>
+                            <select name="status" id="status1" class="form-control">
+                                <option value="All">All</option>
+                                <option value="Pending" {{ $status == 'Pending' ? 'selected' : '' }}>Pending</option>
+                                <option value="Item Delivered" {{ $status == 'Item Delivered' ? 'selected' : '' }}>Item
+                                    Delivered</option>
+                            </select>
                         </div>
                     </div>
                     <div class="col-md-2">
@@ -25,7 +36,7 @@
             </form>
             <div class="card">
                 <div class="card-header d-flex justify-content-between">
-                    <h3>Transfers</h3>
+                    <h3>Advance Payments</h3>
                     <button type="button" class="btn btn-primary " data-bs-toggle="modal" data-bs-target="#new">Create
                         New</button>
                 </div>
@@ -45,25 +56,57 @@
                             <th>#</th>
                             <th>Ref #</th>
                             <th>From</th>
-                            <th>To</th>
+                            <th>For</th>
                             <th>Date</th>
                             <th>Notes</th>
                             <th>Amount</th>
+                            <th>Status</th>
                             <th>Action</th>
                         </thead>
                         <tbody>
-                            @foreach ($transfers as $key => $tran)
+                            @foreach ($advances as $key => $tran)
                                 <tr>
                                     <td>{{ $key + 1 }}</td>
                                     <td>{{ $tran->refID }}</td>
                                     <td>{{ $tran->fromAccount->title }}</td>
-                                    <td>{{ $tran->toAccount->title }}</td>
+                                    <td>{{ $tran->for }}</td>
                                     <td>{{ date('d M Y', strtotime($tran->date)) }}</td>
                                     <td>{{ $tran->notes }}</td>
                                     <td>{{ number_format($tran->amount) }}</td>
+                                    <td>{{ $tran->status }}</td>
                                     <td>
-                                        <a href="{{ route('transfers.delete', $tran->refID) }}"
-                                            class="btn btn-danger">Delete</a>
+                                        <div class="dropdown">
+                                            <button class="btn btn-soft-secondary btn-sm dropdown" type="button"
+                                                data-bs-toggle="dropdown" aria-expanded="false">
+                                                <i class="ri-more-fill align-middle"></i>
+                                            </button>
+                                            <ul class="dropdown-menu dropdown-menu-end">
+                                                <li>
+                                                    <button class="dropdown-item"
+                                                        onclick="newWindow('{{ route('advances.show', $tran->id) }}')"
+                                                        onclick=""><i
+                                                            class="ri-eye-fill align-bottom me-2 text-muted"></i>
+                                                        View
+                                                    </button>
+                                                </li>
+                                                @if ($tran->status == 'Pending')
+                                                    <li>
+                                                        <a class="dropdown-item"
+                                                            href="{{ route('advance.item-delivered', $tran->id) }}"><i
+                                                                class="ri-check-fill align-bottom me-2 text-muted"></i>
+                                                            Mark as Item Delivered
+                                                        </a>
+                                                    </li>
+                                                @endif
+                                                <li>
+                                                    <a class="dropdown-item text-danger"
+                                                        href="{{ route('advance.delete', $tran->refID) }}">
+                                                        <i class="ri-delete-bin-2-fill align-bottom me-2 text-danger"></i>
+                                                        Delete
+                                                    </a>
+                                                </li>
+                                            </ul>
+                                        </div>
                                     </td>
                                 </tr>
                             @endforeach
@@ -80,15 +123,24 @@
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="myModalLabel">Create Transfer</h5>
+                    <h5 class="modal-title" id="myModalLabel">Create Advance Payment</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"> </button>
                 </div>
-                <form action="{{ route('transfers.store') }}" method="post">
+                <form action="{{ route('advances.store') }}" method="post">
                     @csrf
                     <div class="modal-body">
                         <div class="form-group mt-2">
-                            <label for="from">From</label>
-                            <select name="from" id="from" required class="selectize">
+                            <label for="fromID">From (Balance: <span id="accountBalance">0</span>)</label>
+                            <select name="fromID" id="fromID" onchange="getBalance()" required class="selectize">
+                                <option value=""></option>
+                                @foreach ($froms as $from)
+                                    <option value="{{ $from->id }}">{{ $from->title }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                        <div class="form-group mt-2">
+                            <label for="account">Account</label>
+                            <select name="accountID" id="account" required class="selectize">
                                 <option value=""></option>
                                 @foreach ($accounts as $account)
                                     <option value="{{ $account->id }}">{{ $account->title }}</option>
@@ -96,15 +148,10 @@
                             </select>
                         </div>
                         <div class="form-group mt-2">
-                            <label for="to">To</label>
-                            <select name="to" id="to" required class="selectize">
-                                <option value=""></option>
-                                @foreach ($accounts as $account)
-                                    <option value="{{ $account->id }}">{{ $account->title }}</option>
-                                @endforeach
-                            </select>
+                            <label for="for">For</label>
+                            <input type="text" name="for" required id="for" class="form-control">
                         </div>
-                        <div class="form-group">
+                        <div class="form-group mt-2">
                             <label for="amount">Amount</label>
                             <input type="number" step="any" name="amount" required id="amount"
                                 class="form-control">
@@ -116,13 +163,12 @@
                         </div>
                         <div class="form-group mt-2">
                             <label for="notes">Notes</label>
-                            <textarea name="notes" id="notes" cols="30" class="form-control" rows="5"></textarea>
+                            <textarea name="notes" required id="notes" cols="30" class="form-control" rows="5"></textarea>
                         </div>
-
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-light" data-bs-dismiss="modal">Close</button>
-                        <button type="submit" class="btn btn-primary">Transfer</button>
+                        <button type="submit" class="btn btn-primary">Save</button>
                     </div>
                 </form>
             </div><!-- /.modal-content -->
@@ -154,5 +200,26 @@
     <script src="{{ asset('assets/libs/selectize/selectize.min.js') }}"></script>
     <script>
         $(".selectize").selectize();
+
+        function getBalance() {
+            var id = $("#fromID").find(":selected").val();
+            $.ajax({
+                url: "{{ url('/accountbalance/') }}/" + id,
+                method: 'GET',
+                success: function(response) {
+                    $("#accountBalance").html(response.data);
+                    if (response.data > 0) {
+                        $("#accountBalance").addClass('text-success');
+                        $("#accountBalance").removeClass('text-danger');
+                    } else {
+                        $("#accountBalance").addClass('text-danger');
+                        $("#accountBalance").removeClass('text-success');
+                    }
+                },
+                error: function(xhr, status, error) {
+                    console.error(error);
+                }
+            });
+        }
     </script>
 @endsection

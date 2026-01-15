@@ -2,9 +2,12 @@
 
 use App\Http\Controllers\AccountsController;
 use App\Http\Controllers\AccountAdjustmentController;
+use App\Http\Controllers\AdvancePaymentController;
 use App\Http\Controllers\DepositWithdrawController;
 use App\Http\Controllers\ExpenseCategoriesController;
 use App\Http\Controllers\ExpensesController;
+use App\Http\Controllers\PaymentReceivingController;
+use App\Http\Controllers\PaymentsController;
 use App\Http\Controllers\TransferController;
 use App\Http\Middleware\confirmPassword;
 use Illuminate\Support\Facades\Route;
@@ -24,6 +27,16 @@ Route::middleware('auth')->group(function () {
     Route::resource('expensesCategories', ExpenseCategoriesController::class);
     Route::resource('expenses', ExpensesController::class);
     Route::get('expense/delete/{ref}', [ExpensesController::class, 'delete'])->name('expense.delete')->middleware(confirmPassword::class);
+
+    Route::resource('receivings', PaymentReceivingController::class);
+    Route::get('receiving/delete/{ref}', [PaymentReceivingController::class, 'delete'])->name('receiving.delete')->middleware(confirmPassword::class);
+
+    Route::resource('payments', PaymentsController::class);
+    Route::get('payment/delete/{ref}', [PaymentsController::class, 'delete'])->name('payment.delete')->middleware(confirmPassword::class);
+
+    Route::resource('advances', AdvancePaymentController::class);
+    Route::get('advance/delete/{ref}', [AdvancePaymentController::class, 'delete'])->name('advance.delete')->middleware(confirmPassword::class);
+    Route::get('advance/item-delivered/{id}', [AdvancePaymentController::class, 'markAsItemDelivered'])->name('advance.item-delivered');
 
     Route::get('/accountbalance/{id}', function ($id) {
         // Call your Laravel helper function here

@@ -15,6 +15,7 @@ use App\Models\sale_parts;
 use App\Models\sales;
 use App\Models\stock;
 use App\Models\tax_transaction;
+use App\Models\transactions;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -296,22 +297,27 @@ class SaleController extends Controller
     {
         try {
             DB::beginTransaction();
-            $export = export::find($id);
-            foreach ($export->export_cars as $car) {
+            $sale = sales::find($id);
+            foreach ($sale->sale_cars as $car) {
                 $purchase = purchase::find($car->purchase_id);
                 $purchase->update([
                     'status' => 'Available',
                 ]);
             }
-            $export->export_parts()->delete();
-            $export->export_cars()->delete();
-            tax_transaction::where('refID', $export->refID)->delete();
-            stock::where('refID', $export->refID)->delete();
-            $export->delete();
+            foreach ($sale->sale_parts as $part) {
+                $purchase = parts_purchase::find($part->purchase_id);
+                $purchase->update([
+                    'status' => 'Available',
+                ]);
+            }
+            $sale->sale_parts()->delete();
+            $sale->sale_cars()->delete();
+            transactions::where('refID', $sale->refID)->delete();
+            $sale->delete();
             DB::commit();
             session()->forget('confirmed_password');
 
-            return redirect()->route('export.index')->with('error', 'Export deleted successfully');
+            return redirect()->route('sale.index')->with('error', 'Sale deleted successfully');
         } catch (\Exception $e) {
             DB::rollBack();
             session()->forget('confirmed_password');

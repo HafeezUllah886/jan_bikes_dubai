@@ -16,7 +16,7 @@
                                     <h1>{{ projectNameAuth() }}</h1>
                                 </div>
                                 <div class="flex-shrink-0 mt-sm-0 mt-3">
-                                    <h3>Payment Receiving Receipt</h3>
+                                    <h3>Advance Payment Receipt</h3>
                                     <p> <span class="text-muted text-uppercase fw-semibold mt-0 m-0 p-0">Receipt Ref #
                                         </span><span class="fs-14 m-0 p-0">{{ $receiving->refID }}</span></p>
                                     <p> <span class="text-muted text-uppercase fw-semibold mt-0 m-0 p-0">Date : </span><span
@@ -34,6 +34,11 @@
                                     <td style="width:30%;" class="p-4 pb-1"><strong>Received with thanks from</strong></td>
                                     <td class="border-2 border-top-0 border-start-0 border-end-0 text-center p-4 pb-1">
                                         {{ $receiving->fromAccount->title }}</td>
+                                </tr>
+                                <tr>
+                                    <td style="width:30%;" class="p-4 pb-1"><strong>Received for</strong></td>
+                                    <td class="border-2 border-top-0 border-start-0 border-end-0 text-center p-4 pb-1">
+                                        {{ $receiving->for }}</td>
                                 </tr>
                                 <tr>
                                     <td style="width:30%;" class="p-4 pb-1"><strong>Receiving Amount</strong></td>
@@ -57,7 +62,8 @@
                                     <td style="width:80%;" class="p-4 pb-1 text-end" colspan="3"><strong>Previous
                                             Balance: </strong></td>
                                     <td class="border-2 border-top-0 border-start-0 border-end-0 text-center p-4 pb-1">
-                                        {{ number_format(spotBalanceBefore($receiving->fromID, $receiving->refID), 2) }}</td>
+                                        {{ number_format(spotBalanceBefore($receiving->fromID, $receiving->refID), 2) }}
+                                    </td>
                                 </tr>
                                 <tr>
                                     <td class="p-4 pb-1"><strong>Deposited By: _________________</strong></td>

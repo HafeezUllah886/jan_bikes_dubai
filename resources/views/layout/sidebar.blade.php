@@ -100,12 +100,24 @@
                     <div class="collapse menu-dropdown" id="sidebarFinance">
                         <ul class="nav nav-sm flex-column">
                             <li class="nav-item">
-                                <a href="{{ route('accounts_adjustments.create') }}" class="nav-link"
+                                <a href="{{ route('accounts_adjustments.index') }}" class="nav-link"
                                     data-key="t-level-2.1"> Account Adjustment </a>
                             </li>
                             <li class="nav-item">
                                 <a href="{{ route('transfers.index') }}" class="nav-link" data-key="t-level-2.1">
                                     Transfer </a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="{{ route('receivings.index') }}" class="nav-link" data-key="t-level-2.1">
+                                    Payment Receiving </a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="{{ route('payments.index') }}" class="nav-link" data-key="t-level-2.1">
+                                    Payments </a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="{{ route('advances.index') }}" class="nav-link" data-key="t-level-2.1">
+                                    Advance Payments </a>
                             </li>
                             <li class="nav-item">
                                 <a href="{{ route('expenses.index') }}" class="nav-link" data-key="t-level-2.1">
