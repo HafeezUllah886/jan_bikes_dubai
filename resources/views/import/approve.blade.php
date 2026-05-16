@@ -54,6 +54,7 @@
                                                     <th class='no-padding'>Dubai Expense</th>
                                                     <th class='no-padding'>Net Cost</th>
                                                     <th class='no-padding'>Sale Price</th>
+                                                    <th class='no-padding'>Min Price</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
@@ -130,6 +131,10 @@
                                                                 <input type="number" name="car_sale_price[]" required
                                                                     value="0" class="form-control">
                                                             </td>
+                                                            <td class="text-end no-padding">
+                                                                <input type="number" name="car_sale_min_price[]" required
+                                                                    value="0" class="form-control">
+                                                            </td>
                                                             <input type="hidden" name="car_id[]"
                                                                 value="{{ $car->id }}">
                                                         </tr>
@@ -151,6 +156,7 @@
                                                     <th class="text-end no-padding">
                                                         {{ number_format(round($import->cars->where('type', 'Car')->sum('price') + $expensePerCarJapan * $total_cars + $expensePerCarDubai * $total_cars, 4)) }}
                                                     </th>
+                                                    <th></th>
                                                     <th></th>
                                                 </tr>
                                             </tfoot>
@@ -175,6 +181,7 @@
                                                     <th class='no-padding'>Dubai Expense</th>
                                                     <th class='no-padding'>Net Cost</th>
                                                     <th class='no-padding'>Sale Price</th>
+                                                    <th class='no-padding'>Min Price</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
@@ -214,6 +221,10 @@
                                                                 <input type="number" name="car_sale_price[]" required
                                                                     value="0" class="form-control">
                                                             </td>
+                                                            <td class="text-end no-padding">
+                                                                <input type="number" name="car_sale_min_price[]" required
+                                                                    value="0" class="form-control">
+                                                            </td>
                                                             <input type="hidden" name="car_id[]"
                                                                 value="{{ $car->id }}">
                                                         </tr>
@@ -235,6 +246,8 @@
                                                     <th class="text-end no-padding">
                                                         {{ number_format(round($import->cars->where('type', 'Bike')->sum('price') + $expensePerBikeJapan * $total_bikes + $expensePerBikeDubai * $total_bikes, 4)) }}
                                                     </th>
+                                                    <th class="text-end no-padding"></th>
+                                                    <th class="text-end no-padding"></th>
                                                 </tr>
                                             </tfoot>
                                         </table>
@@ -254,6 +267,7 @@
                                                     <th class='no-padding text-center'>Quantity</th>
                                                     <th class='no-padding text-center'>Net Cost / Piece</th>
                                                     <th class='no-padding text-center'>Sale Price / Piece</th>
+                                                    <th class='no-padding text-center'>Min Price / Piece</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
@@ -288,6 +302,10 @@
                                                             <input type="number" required name="part_sale_price[]"
                                                                 value="0" class="form-control">
                                                         </td>
+                                                        <td class="text-center no-padding">
+                                                            <input type="number" required name="part_min_price[]"
+                                                                value="0" class="form-control">
+                                                        </td>
                                                         <input type="hidden" name="part_id[]"
                                                             value="{{ $part->id }}">
                                                     </tr>
@@ -307,6 +325,7 @@
                                                     </th>
                                                     <th class="text-end no-padding text-center">
                                                         {{ number_format(round($import->parts->sum('qty'), 4)) }}</th>
+                                                    <th></th>
                                                     <th></th>
                                                     <th></th>
                                                 </tr>

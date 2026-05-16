@@ -28,9 +28,9 @@ class SaleController extends Controller
     {
         $start = $request->start ?? firstDayOfMonth();
         $end = $request->end ?? lastDayOfMonth();
-      
+
         $sales = sales::whereBetween('date', [$start, $end])->get();
-        
+
         return view('sales.index', compact('sales', 'start', 'end'));
     }
 
@@ -47,8 +47,9 @@ class SaleController extends Controller
             $avail_qty = $part->qty - $sales->sum('qty');
             $part->avail_qty = $avail_qty;
         }
-        
+
         $customers = accounts::customer()->get();
+
         return view('sales.create', compact('products', 'parts', 'customers'));
     }
 
@@ -86,6 +87,8 @@ class SaleController extends Controller
                             'chassis' => $purchase->chassis,
                             'pprice' => $purchase->price,
                             'price' => $request->car_price[$key],
+                            'vcc' => $request->car_vcc[$key],
+                            'total' => $request->car_total[$key],
                             'profit' => $profit,
                             'date' => $request->date,
                             'profit_type' => $request->car_profit[$key],
@@ -98,7 +101,7 @@ class SaleController extends Controller
 
                 foreach ($parts as $key => $part) {
                     $part_purchase = parts_purchase::find($part);
-                  $profit = $request->part_price[$key] - $part_purchase->price;
+                    $profit = $request->part_price[$key] - $part_purchase->price;
                     sale_parts::create(
                         [
                             'sale_id' => $sale->id,
@@ -121,9 +124,9 @@ class SaleController extends Controller
             DB::commit();
 
             return redirect()->route('sale.index')->with('success', 'Sale created successfully');
-       } catch (\Exception $e) {
+        } catch (\Exception $e) {
             DB::rollBack();
- 
+
             return redirect()->back()->with('error', $e->getMessage());
         }
     }
@@ -199,7 +202,7 @@ class SaleController extends Controller
                     'purchase_amount' => $request->total,
                     /* 'transport_charges' => $request->expense, */
                     'other_expenses' => $request->otherexpense,
-                     'cars_expense' => $request->car_expense,
+                    'cars_expense' => $request->car_expense,
                     'parts_expense' => $request->parts_expense,
                     'rate' => $request->rate,
                     'total_exp' => $request->total_expense,
@@ -248,7 +251,7 @@ class SaleController extends Controller
                 foreach ($parts as $key => $part) {
                     $part_purchase = parts_purchase_details::find($part);
                     $part_details = parts::find($part_purchase->part_id);
-                    
+
                     export_parts::create(
                         [
                             'export_id' => $export->id,
@@ -283,9 +286,9 @@ class SaleController extends Controller
             DB::commit();
 
             return redirect()->route('export.index')->with('success', 'Export updated successfully');
-       } catch (\Exception $e) {
+        } catch (\Exception $e) {
             DB::rollBack();
- 
+
             return redirect()->back()->with('error', $e->getMessage());
         }
     }
@@ -321,11 +324,10 @@ class SaleController extends Controller
         } catch (\Exception $e) {
             DB::rollBack();
             session()->forget('confirmed_password');
- 
+
             return redirect()->back()->with('error', $e->getMessage());
         }
     }
-
 
     public function getPart($id)
     {

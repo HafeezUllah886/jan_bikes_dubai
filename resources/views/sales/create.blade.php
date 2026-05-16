@@ -20,7 +20,7 @@
                     <form action="{{ route('sale.store') }}" method="post">
                         @csrf
                         <div class="row">
-                            <div class="col-lg-6">
+                            <div class="col-lg-12">
                                 <div class="row">
                                     <div class="col-12">
                                         <table class="table table-striped table-hover">
@@ -30,7 +30,10 @@
                                                 <th width="">Chassis</th>
                                                 <th class="text-start">Company</th>
                                                 <th class="text-start">Model</th>
+                                                <th width="" class="text-center">Min Price</th>
                                                 <th width="" class="text-center">Price</th>
+                                                <th width="" class="text-center">VCC</th>
+                                                <th width="" class="text-center">Total</th>
                                                 <th width="" class="text-start">Profit</th>
                                                 <th></th>
                                             </thead>
@@ -45,8 +48,18 @@
                                                         <td class="no-padding">{{ $product->chassis }}</td>
                                                         <td class="no-padding">{{ $product->company }}</td>
                                                         <td class="no-padding">{{ $product->model }}</td>
+                                                        <td class="no-padding">{{ $product->min_price }}</td>
                                                         <td class="no-padding"><input type="number" name="car_price[]"
                                                                 id="car_price_{{ $product->id }}"
+                                                                class="form-control form-control-sm text-center"
+                                                                value="{{ $product->sale_price }}"></td>
+                                                        <td class="no-padding"><input type="number" name="car_vcc[]"
+                                                                id="car_vcc_{{ $product->id }}"
+                                                                class="form-control form-control-sm text-center"
+                                                                value="0" oninput="carTotal({{ $product->id }})">
+                                                        </td>
+                                                        <td class="no-padding"><input type="number" name="car_total[]"
+                                                                id="car_total_{{ $product->id }}"
                                                                 class="form-control form-control-sm text-center"
                                                                 value="{{ $product->sale_price }}"></td>
                                                         <td class="no-padding">
@@ -63,7 +76,7 @@
                                             </tbody>
                                             <tfoot>
                                                 <tr>
-                                                    <th colspan="5" class="text-end no-padding">Total</th>
+                                                    <th colspan="6" class="text-end no-padding">Total</th>
                                                     <th class="text-end no-padding" id="totalPrice">
                                                         {{ number_format($products->sum('total'), 2) }}</th>
                                                     <th class="no-padding"></th>
@@ -73,7 +86,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-lg-6">
+                            <div class="col-lg-12">
                                 <div class="row">
                                     <div class="col-12">
                                         <div class="form-group">
@@ -95,6 +108,7 @@
                                             <thead>
                                                 <th width="30%">Description</th>
                                                 <th width="" class="text-center">Qty</th>
+                                                <th width="" class="text-center">Min Price</th>
                                                 <th width="" class="text-center">Price</th>
                                                 <th width="" class="text-center">Amount</th>
                                                 <th width="" class="text-start">Profit</th>
@@ -251,6 +265,8 @@
                             '" class="form-control form-control-sm text-center" oninput="part_amount(' + id +
                             ')" id="qty_' + id + '"></td>';
                         html +=
+                            '<td class="no-padding">' + part.min_price + '</td>';
+                        html +=
                             '<td class="no-padding"><input type="number" oninput="part_amount(' + id +
                             ')" name="part_price[]" required step="any" value="' +
                             part.sale_price +
@@ -300,5 +316,13 @@
         }
 
         $(".selectize1").selectize();
+
+        function carTotal(id) {
+            var price = parseFloat($("#car_price_" + id).val());
+            var vcc = parseFloat($("#car_vcc_" + id).val());
+            var total = price + vcc;
+            $("#car_total_" + id).val(total.toFixed(2));
+            updateTotal();
+        }
     </script>
 @endsection

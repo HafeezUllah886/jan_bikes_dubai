@@ -68,6 +68,7 @@
                             <th>#</th>
                             <th>Date</th>
                             <th>Inv No.</th>
+                            <th>Type</th>
                             <th>Chassis No.</th>
                             <th>Engine No.</th>
                             <th>Description</th>
@@ -81,6 +82,7 @@
                                     <td>{{ $key + 1 }}</td>
                                     <td>{{ date('d M Y', strtotime($purchase->date)) }}</td>
                                     <td>{{ $purchase->inv_no }}</td>
+                                    <td>{{ $purchase->type }}</td>
                                     <td>{{ $purchase->chassis }}</td>
                                     <td>{{ $purchase->engine }}</td>
                                     <td>{{ $purchase->model }} | {{ $purchase->company }} | {{ $purchase->color }} </td>
@@ -110,7 +112,7 @@
                         </tbody>
                         <tfoot>
                             <tr>
-                                <td colspan="6" class="text-end">Total</td>
+                                <td colspan="7" class="text-end">Total</td>
                                 <td>{{ $purchases->sum('total') }}</td>
                                 <td></td>
                                 <td></td>

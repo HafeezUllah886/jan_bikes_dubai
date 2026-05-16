@@ -60,6 +60,8 @@
                                                 <th scope="col" class="text-start">Color</th>
                                                 <th scope="col" class="text-start">Company</th>
                                                 <th scope="col" class="text-end">Price</th>
+                                                <th scope="col" class="text-end">VCC</th>
+                                                <th scope="col" class="text-end">Total</th>
                                             </tr>
                                         </thead>
                                         <tbody id="products-list">
@@ -71,13 +73,15 @@
                                                     <td class="text-start">{{ $sale_car->purchase->color }}</td>
                                                     <td class="text-start">{{ $sale_car->purchase->company }}</td>
                                                     <td class="text-end">{{ number_format($sale_car->price) }}</td>
+                                                    <td class="text-end">{{ number_format($sale_car->vcc) }}</td>
+                                                    <td class="text-end">{{ number_format($sale_car->total) }}</td>
                                                 </tr>
                                             @endforeach
                                         </tbody>
                                         <tfoot>
                                             <tr>
-                                                <td colspan="5" class="text-end">Total:</td>
-                                                <td class="text-end">{{ number_format($sale->sale_cars->sum('price')) }}
+                                                <td colspan="7" class="text-end">Total:</td>
+                                                <td class="text-end">{{ number_format($sale->sale_cars->sum('total')) }}
                                                 </td>
                                             </tr>
                                         </tfoot>
