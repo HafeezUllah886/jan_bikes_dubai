@@ -4,10 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\accounts;
 use App\Models\transactions;
-use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use Symfony\Component\Finder\Exception\AccessDeniedException;
 
 class AccountsController extends Controller
 {
@@ -36,58 +34,47 @@ class AccountsController extends Controller
     {
         $request->validate(
             [
-                'title' => 'required|unique:accounts,title'
+                'title' => 'required|unique:accounts,title',
             ],
             [
-                'title.required' => "Please Enter Account Title",
-                'title.unique'  => "Account with this title already exists"
+                'title.required' => 'Please Enter Account Title',
+                'title.unique' => 'Account with this title already exists',
             ]
         );
 
-        try
-        {
+        try {
             DB::beginTransaction();
 
-                $ref = getRef();
-                if($request->type != "Business")
-                {
-                    $account = accounts::create(
-                        [
-                            'title' => $request->title,
-                            'type' => $request->type,
-                            'category' => $request->category,
-                            'contact' => $request->contact,
-                            'address' => $request->address,
-                        ]
-                    );
-                }
-                else
-                {
-                    $account = accounts::create(
-                        [
-                            'title' => $request->title,
-                            'type' => $request->type,
-                            'category' => $request->category
-                        ]
-                    );
-                }
+            $ref = getRef();
+            if ($request->type != 'Business') {
+                $account = accounts::create(
+                    [
+                        'title' => $request->title,
+                        'type' => $request->type,
+                        'contact' => $request->contact,
+                        'address' => $request->address,
+                    ]
+                );
+            } else {
+                $account = accounts::create(
+                    [
+                        'title' => $request->title,
+                        'type' => $request->type,
+                    ]
+                );
+            }
 
-                if($request->initial > 0)
-                {
-                    if($request->initialType == '0')
-                    {
-                        createTransaction($account->id,now(), $request->initial,0, "Initial Amount", $ref, 'Initial');
-                    }
-                    else
-                    {
-                        createTransaction($account->id,now(), 0, $request->initial, "Initial Amount", $ref, 'Initial');
-                    }
+            if ($request->initial > 0) {
+                if ($request->initialType == '0') {
+                    createTransaction($account->id, now(), $request->initial, 0, 'Initial Amount', $ref, 'Initial');
+                } else {
+                    createTransaction($account->id, now(), 0, $request->initial, 'Initial Amount', $ref, 'Initial');
                 }
-           DB::commit();
-           return back()->with('success', "Account Created Successfully");
-        }
-        catch(\Exception $e)
-        {
+            }
+            DB::commit();
+
+            return back()->with('success', 'Account Created Successfully');
+        } catch (\Exception $e) {
             return back()->with('error', $e->getMessage());
         }
     }
@@ -113,7 +100,6 @@ class AccountsController extends Controller
         return view('Finance.accounts.statment', compact('account', 'transactions', 'pre_balance', 'cur_balance', 'from', 'to'));
     }
 
-    
     /**
      * Show the form for editing the specified resource.
      */
@@ -129,11 +115,11 @@ class AccountsController extends Controller
     {
         $request->validate(
             [
-                'title' => "required|unique:accounts,title,". $request->accountID,
+                'title' => 'required|unique:accounts,title,'.$request->accountID,
             ],
             [
-                'title.required' => "Please Enter Account Title",
-                'title.unique'  => "Account with this title already exists"
+                'title.required' => 'Please Enter Account Title',
+                'title.unique' => 'Account with this title already exists',
             ]
         );
         $account = accounts::find($request->accountID)->update(
@@ -145,7 +131,7 @@ class AccountsController extends Controller
             ]
         );
 
-        return redirect()->route('accountsList', $request->type)->with('success', "Account Updated");
+        return redirect()->route('accountsList', $request->type)->with('success', 'Account Updated');
     }
 
     /**
