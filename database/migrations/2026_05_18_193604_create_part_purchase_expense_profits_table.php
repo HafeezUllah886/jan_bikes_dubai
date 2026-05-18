@@ -11,9 +11,9 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('sale_cars', function (Blueprint $table) {
-            $table->float('vcc', 15, 2)->default(0);
-            $table->float('total', 15, 2)->default(0);
+        Schema::create('part_purchase_expense_profits', function (Blueprint $table) {
+            $table->id();
+            $table->timestamps();
         });
     }
 
@@ -22,9 +22,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('sale_cars', function (Blueprint $table) {
-            $table->dropColumn('vcc');
-            $table->dropColumn('total');
-        });
+        Schema::dropIfExists('part_purchase_expense_profits');
     }
 };

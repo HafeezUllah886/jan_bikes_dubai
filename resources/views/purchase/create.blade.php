@@ -116,6 +116,16 @@
                             </div>
                             <div class="col-12 col-md-2">
                                 <div class="form-group mt-2">
+                                    <label for="profit">Profit</label>
+                                    <select name="profit" id="profit" class="form-control">
+                                        <option value="1">Yes</option>
+                                        <option value="0">No</option>
+
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-12 col-md-2">
+                                <div class="form-group mt-2">
                                     <label for="vendor">Vendor</label>
                                     <select name="vendor" id="vendor" required class="form-control">
                                         <option value="">Select Vendor</option>

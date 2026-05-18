@@ -34,7 +34,6 @@
                                                 <th width="" class="text-center">Price</th>
                                                 <th width="" class="text-center">VCC</th>
                                                 <th width="" class="text-center">Total</th>
-                                                <th width="" class="text-start">Profit</th>
                                                 <th></th>
                                             </thead>
                                             <tbody id="products_list">
@@ -62,21 +61,13 @@
                                                                 id="car_total_{{ $product->id }}"
                                                                 class="form-control form-control-sm text-center"
                                                                 value="{{ $product->sale_price }}"></td>
-                                                        <td class="no-padding">
-                                                            <select name="car_profit[]"
-                                                                class="form-control form-control-sm text-center"
-                                                                id="car_profit_{{ $product->id }}">
-                                                                <option value="Both">Both</option>
-                                                                <option value="Only Profit">Only Profit</option>
-                                                                <option value="Only Loss">Only Loss</option>
-                                                            </select>
-                                                        </td>
+
                                                     </tr>
                                                 @endforeach
                                             </tbody>
                                             <tfoot>
                                                 <tr>
-                                                    <th colspan="6" class="text-end no-padding">Total</th>
+                                                    <th colspan="5" class="text-end no-padding">Total</th>
                                                     <th class="text-end no-padding" id="totalPrice">
                                                         {{ number_format($products->sum('total'), 2) }}</th>
                                                     <th class="no-padding"></th>
@@ -111,13 +102,12 @@
                                                 <th width="" class="text-center">Min Price</th>
                                                 <th width="" class="text-center">Price</th>
                                                 <th width="" class="text-center">Amount</th>
-                                                <th width="" class="text-start">Profit</th>
                                                 <th></th>
                                             </thead>
                                             <tbody id="parts_list"></tbody>
                                             <tfoot>
                                                 <tr>
-                                                    <th colspan="3" class="text-end no-padding">Total</th>
+                                                    <th colspan="4" class="text-end no-padding">Total</th>
                                                     <th class="text-center no-padding" id="totalPartPrice">0.00</th>
                                                     <th class="text-start no-padding"></th>
                                                 </tr>
@@ -277,13 +267,7 @@
                             part.amount +
                             '" min="0" class="form-control form-control-sm text-center" id="part_amount_' + id +
                             '"></td>';
-                        html +=
-                            ' <td class="no-padding"><select name="part_profit[]" class="form-control form-control-sm text-center" id="part_profit_' +
-                            id + '">' +
-                            '<option value="Both">Both</option>' +
-                            '<option value="Only Profit">Only Profit</option>' +
-                            '<option value="Only Loss">Only Loss</option>' +
-                            '</select></td>';
+
                         html +=
                             '<td class="no-padding"> <span class="btn btn-sm btn-danger mt-0" onclick="deleteRow(' +
                             id + ')">X</span> </td>';

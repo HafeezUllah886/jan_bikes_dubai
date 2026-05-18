@@ -82,6 +82,7 @@ class ImportApprovalController extends Controller
                         'import_id' => $id,
                         'refID' => $ref,
                         'vendor_id' => 2,
+                        'profitable' => $request->car_profit[$key],
                     ]);
                 }
             }
@@ -104,6 +105,7 @@ class ImportApprovalController extends Controller
                         'refID' => $ref,
                         'import_id' => $id,
                         'vendor_id' => 2,
+                        'profitable' => $request->part_profit[$key],
                     ]);
                 }
             }

@@ -49,8 +49,14 @@
             <div class="card">
                 <div class="card-header d-flex justify-content-between">
                     <h3>Purchases</h3>
-                    <a href="{{ route('purchase.create') }}" type="button" class="btn btn-primary ">Create
-                        New</a>
+                    <div>
+                        <button type="button" class="btn btn-info" data-bs-toggle="modal" data-bs-target="#addExpenses">Add
+                            Expenses / Profit</button>
+
+                        <a href="{{ route('purchase.create') }}" type="button" class="btn btn-primary ">Create
+                            New</a>
+                    </div>
+
                 </div>
                 <div class="card-body">
                     @if ($errors->any())
@@ -122,6 +128,84 @@
                     </table>
                 </div>
 
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade zoomIn" id="addExpenses" tabindex="-1" aria-labelledby="addExpensesLabel" aria-hidden="true">
+        <div class="modal-dialog modal-md modal-dialog-centered modal-dialog-scrollable">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="addExpensesLabel">Add Expense / Profit</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form action="" method="post">
+                        @csrf
+                        <input type="hidden" name="purchase_id" value="{{ $purchase->id }}">
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="form-group">
+                                    <label for="import_id">Select Import</label>
+                                    <select name="import_id" id="import_id" class="form-control">
+                                        <option value="">Select Import</option>
+                                        @foreach ($imports as $import)
+                                            <option value="{{ $import->id }}">{{ $import->inv_no }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-12 mt-2">
+                                <div class="form-group">
+                                    <label for="type">Type</label>
+                                    <select name="type" id="type" class="form-control">
+                                        <option value="expense">Expense</option>
+                                        <option value="profit">Profit</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="col-12 mt-2">
+                                <div class="form-group">
+                                    <label for="amount">Bike Amount</label>
+                                    <input type="number" name="bike_amount" id="bike_amount"
+                                        value="{{ old('bike_amount') }}" class="form-control">
+                                </div>
+                            </div>
+                            <div class="col-12 mt-2">
+                                <div class="form-group">
+                                    <label for="amount">Car Amount</label>
+                                    <input type="number" name="car_amount" id="car_amount"
+                                        value="{{ old('car_amount') }}" class="form-control">
+                                </div>
+                            </div>
+                            <div class="col-12 mt-2">
+                                <div class="form-group">
+                                    <label for="amount">Parts Amount</label>
+                                    <input type="number" name="parts_amount" id="parts_amount"
+                                        value="{{ old('parts_amount') }}" class="form-control">
+                                </div>
+                            </div>
+                            <div class="col-12 mt-2">
+                                <div class="form-group">
+                                    <label for="date">Date</label>
+                                    <input type="date" name="date" id="date"
+                                        value="{{ old('date', date('Y-m-d')) }}" class="form-control">
+                                </div>
+                            </div>
+                            <div class="col-12 mt-2">
+                                <div class="form-group">
+                                    <label for="description">Description</label>
+                                    <textarea name="description" id="description" class="form-control">{{ old('description') }}</textarea>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary">Save changes</button>
+                </div>
             </div>
         </div>
     </div>

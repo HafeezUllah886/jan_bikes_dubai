@@ -2,23 +2,16 @@
 
 namespace App\Http\Controllers;
 
+use App\Imports\PurchasesImport;
 use App\Models\accounts;
-use App\Models\products;
+use App\Models\auctions;
+use App\Models\imports;
 use App\Models\purchase;
-use App\Models\purchase_details;
-use App\Models\purchase_payments;
-use App\Models\stock;
 use App\Models\transactions;
-use App\Models\units;
-use App\Models\warehouses;
-use Exception;
+use App\Models\yards;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use App\Imports\PurchasesImport;
-use App\Models\auctions;
-use App\Models\yards;
 use Maatwebsite\Excel\Facades\Excel;
-
 
 class PurchaseController extends Controller
 {
@@ -30,21 +23,24 @@ class PurchaseController extends Controller
         $start = $request->start ?? firstDayOfMonth();
         $end = $request->end ?? lastDayOfMonth();
         $inv_no = $request->inv_no ?? null;
-        $status = $request->status ?? "all";
-        
-         if($inv_no){
+        $status = $request->status ?? 'all';
+
+        if ($inv_no) {
             $purchases = purchase::where('inv_no', $inv_no)->get();
-         }else{
-            
+        } else {
+
             $purchases = purchase::whereBetween('date', [$start, $end]);
-            if($status != "all"){
+            if ($status != 'all') {
                 $purchases = $purchases->where('status', $status);
             }
             $purchases = $purchases->get();
-         }
+        }
         $invoices = purchase::where('status', 'Available')->select('inv_no')->distinct()->get();
 
-        return view('purchase.index', compact('purchases', 'start', 'end', 'inv_no', 'invoices', 'status'));
+        $imports = purchase::whereNotNull('import_id')->distinct('import_id')->pluck('import_id')->toArray();
+        $imports = imports::whereIn('id', $imports)->get();
+
+        return view('purchase.index', compact('purchases', 'start', 'end', 'inv_no', 'invoices', 'status', 'imports'));
     }
 
     /**
@@ -53,6 +49,7 @@ class PurchaseController extends Controller
     public function create()
     {
         $vendors = accounts::vendor()->get();
+
         return view('purchase.create', compact('vendors'));
     }
 
@@ -61,11 +58,10 @@ class PurchaseController extends Controller
      */
     public function store(Request $request)
     {
-       try
-        {
+        try {
             $request->validate(
                 [
-                    'chassis'   =>  'required|unique:purchases,chassis',
+                    'chassis' => 'required|unique:purchases,chassis',
                 ],
                 [
                     'chassis.unique' => 'Chassis No. Already Exist',
@@ -75,34 +71,35 @@ class PurchaseController extends Controller
             $ref = getRef();
             $purchase = purchase::create(
                 [
-                    "inv_no"        =>  $request->invoice_no,
-                    "meter_type"    =>  $request->meter_type,
-                    "company"       =>  $request->company,
-                    "model"         =>  $request->model,
-                    "color"         =>  $request->color,
-                    "chassis"       =>  $request->chassis,
-                    "engine"        =>  $request->engine,
-                    "date"          =>  $request->date,
-                    "price"         =>  $request->price,
-                    "expense"       =>  $request->expenses,
-                    "total"         =>  $request->total_cost,
-                    "sale_price"    =>  $request->sale_price,
-                    "notes"         =>  $request->notes,
-                    "type"          =>  $request->type,
-                    "purchase_type" =>  "Purchase",
-                    "refID"         =>  $ref,
-                    "vendor_id"     =>  $request->vendor,
+                    'inv_no' => $request->invoice_no,
+                    'meter_type' => $request->meter_type,
+                    'company' => $request->company,
+                    'model' => $request->model,
+                    'color' => $request->color,
+                    'chassis' => $request->chassis,
+                    'engine' => $request->engine,
+                    'date' => $request->date,
+                    'price' => $request->price,
+                    'expense' => $request->expenses,
+                    'total' => $request->total_cost,
+                    'sale_price' => $request->sale_price,
+                    'notes' => $request->notes,
+                    'type' => $request->type,
+                    'purchase_type' => 'Purchase',
+                    'refID' => $ref,
+                    'profitable' => $request->profit,
+                    'vendor_id' => $request->vendor,
                 ]
             );
 
-            createTransaction($request->vendor,$request->date,0,$request->total_cost, "Pending Amount of Purchase Chassis No. ".$request->chassis,$ref);
+            createTransaction($request->vendor, $request->date, 0, $request->total_cost, 'Pending Amount of Purchase Chassis No. '.$request->chassis, $ref);
 
             DB::commit();
-            return to_route('purchase.show', $purchase->id)->with('success', "Purchase Created");
-        }
-        catch(\Exception $e)
-        {
+
+            return to_route('purchase.show', $purchase->id)->with('success', 'Purchase Created');
+        } catch (\Exception $e) {
             DB::rollback();
+
             return back()->with('error', $e->getMessage());
         }
     }
@@ -135,11 +132,10 @@ class PurchaseController extends Controller
      */
     public function update(Request $request, $id)
     {
-        try
-        {
+        try {
             $request->validate(
                 [
-                    'chassis'   =>  'required|unique:purchases,chassis,'.$id,
+                    'chassis' => 'required|unique:purchases,chassis,'.$id,
                 ],
                 [
                     'chassis.unique' => 'Chassis No. Already Exist',
@@ -148,39 +144,39 @@ class PurchaseController extends Controller
             DB::beginTransaction();
             $purchase = purchase::find($id);
             transactions::where('refID', $purchase->refID)->delete();
-        
+
             $purchase->update(
                 [
-                  
-                    "account_id"            =>  $request->account,
-                    "meter_type"            =>  $request->meter_type,
-                    "company"               =>  $request->company,
-                    "model"                 =>  $request->model,
-                    "color"                 =>  $request->color,
-                    "chassis"               =>  $request->chassis,
-                    "engine"                =>  $request->engine,
-                    "auction"               =>  $request->auction,
-                    "yard"                  =>  $request->yard,
-                    "date"                  =>  $request->date,
-                    "price"                 =>  $request->price,
-                    "ptax"                  =>  $request->ptax,
-                    "tax"                   =>  $request->tax,
-                    "rikso"                 =>  $request->rikso,
-                    "auction_fee"           =>  $request->auction_fee,
-                    "total"                 =>  $request->total,
-                    "rate"                  =>  $request->rate,
-                    "net_dirham"            =>  $request->net_dirham,
-                    "notes"                 =>  $request->notes,
-                    "type"                  =>  $request->type,
+
+                    'account_id' => $request->account,
+                    'meter_type' => $request->meter_type,
+                    'company' => $request->company,
+                    'model' => $request->model,
+                    'color' => $request->color,
+                    'chassis' => $request->chassis,
+                    'engine' => $request->engine,
+                    'auction' => $request->auction,
+                    'yard' => $request->yard,
+                    'date' => $request->date,
+                    'price' => $request->price,
+                    'ptax' => $request->ptax,
+                    'tax' => $request->tax,
+                    'rikso' => $request->rikso,
+                    'auction_fee' => $request->auction_fee,
+                    'total' => $request->total,
+                    'rate' => $request->rate,
+                    'net_dirham' => $request->net_dirham,
+                    'notes' => $request->notes,
+                    'type' => $request->type,
                 ]
             );
-                 createTransaction($request->account, $request->date, 0, $request->net_dirham, "Payment of Purchase ID $purchase->id - Chassis No. $request->chassis", $purchase->refID);
+            createTransaction($request->account, $request->date, 0, $request->net_dirham, "Payment of Purchase ID $purchase->id - Chassis No. $request->chassis", $purchase->refID);
             DB::commit();
-            return to_route('purchase.show', $purchase->id)->with('success', "Purchase Updated");
-        }
-        catch(\Exception $e)
-        {
+
+            return to_route('purchase.show', $purchase->id)->with('success', 'Purchase Updated');
+        } catch (\Exception $e) {
             DB::rollback();
+
             return back()->with('error', $e->getMessage());
         }
     }
@@ -191,43 +187,36 @@ class PurchaseController extends Controller
     public function destroy($id)
     {
 
-        try
-        {
+        try {
             DB::beginTransaction();
             $purchase = purchase::find($id);
             transactions::where('refID', $purchase->refID)->delete();
             $purchase->delete();
             DB::commit();
             session()->forget('confirmed_password');
-            return redirect()->route('purchase.index')->with('success', "Purchase Deleted");
-        }
-        catch(\Exception $e)
-        {
+
+            return redirect()->route('purchase.index')->with('success', 'Purchase Deleted');
+        } catch (\Exception $e) {
             DB::rollBack();
             session()->forget('confirmed_password');
+
             return redirect()->route('purchase.index')->with('error', $e->getMessage());
         }
     }
 
-
     public function import(Request $request)
     {
-        try
-        {
+        try {
             $file = $request->file('excel');
-        $extension = $file->getClientOriginalExtension();
-        if($extension == "xlsx")
-        {
-            Excel::import(new PurchasesImport, $file);
-            return back()->with("success", "Successfully imported");
-        }
-        else
-        {
-            return back()->with("error", "Invalid file extension");
-        }
-        }
-        catch(\Exception $e)
-        {
+            $extension = $file->getClientOriginalExtension();
+            if ($extension == 'xlsx') {
+                Excel::import(new PurchasesImport, $file);
+
+                return back()->with('success', 'Successfully imported');
+            } else {
+                return back()->with('error', 'Invalid file extension');
+            }
+        } catch (\Exception $e) {
             return back()->with('error', $e->getMessage());
         }
     }

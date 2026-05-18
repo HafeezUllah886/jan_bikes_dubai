@@ -55,6 +55,7 @@
                                                     <th class='no-padding'>Net Cost</th>
                                                     <th class='no-padding'>Sale Price</th>
                                                     <th class='no-padding'>Min Price</th>
+                                                    <th class='no-padding' style="width: 80px;">Profit %</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
@@ -135,6 +136,13 @@
                                                                 <input type="number" name="car_sale_min_price[]" required
                                                                     value="0" class="form-control">
                                                             </td>
+                                                            <td class="text-end no-padding">
+                                                                <select name="car_profit[]" required class="form-select"
+                                                                    style="background-image: none; padding-right: 0.75rem;">
+                                                                    <option value="1">Yes</option>
+                                                                    <option value="0">No</option>
+                                                                </select>
+                                                            </td>
                                                             <input type="hidden" name="car_id[]"
                                                                 value="{{ $car->id }}">
                                                         </tr>
@@ -156,6 +164,7 @@
                                                     <th class="text-end no-padding">
                                                         {{ number_format(round($import->cars->where('type', 'Car')->sum('price') + $expensePerCarJapan * $total_cars + $expensePerCarDubai * $total_cars, 4)) }}
                                                     </th>
+                                                    <th></th>
                                                     <th></th>
                                                     <th></th>
                                                 </tr>
@@ -182,6 +191,7 @@
                                                     <th class='no-padding'>Net Cost</th>
                                                     <th class='no-padding'>Sale Price</th>
                                                     <th class='no-padding'>Min Price</th>
+                                                    <th class='no-padding' style="width: 80px;">Profit</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
@@ -225,6 +235,13 @@
                                                                 <input type="number" name="car_sale_min_price[]" required
                                                                     value="0" class="form-control">
                                                             </td>
+                                                            <td class="text-end no-padding">
+                                                                <select name="car_profit[]" required class="form-select"
+                                                                    style="background-image: none; padding-right: 0.75rem;">
+                                                                    <option value="1">Yes</option>
+                                                                    <option value="0">No</option>
+                                                                </select>
+                                                            </td>
                                                             <input type="hidden" name="car_id[]"
                                                                 value="{{ $car->id }}">
                                                         </tr>
@@ -248,6 +265,7 @@
                                                     </th>
                                                     <th class="text-end no-padding"></th>
                                                     <th class="text-end no-padding"></th>
+                                                    <th class="text-end no-padding"></th>
                                                 </tr>
                                             </tfoot>
                                         </table>
@@ -268,6 +286,7 @@
                                                     <th class='no-padding text-center'>Net Cost / Piece</th>
                                                     <th class='no-padding text-center'>Sale Price / Piece</th>
                                                     <th class='no-padding text-center'>Min Price / Piece</th>
+                                                    <th class='no-padding text-center' style="width: 80px;">Profit</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
@@ -306,6 +325,13 @@
                                                             <input type="number" required name="part_min_price[]"
                                                                 value="0" class="form-control">
                                                         </td>
+                                                        <td class="text-center no-padding">
+                                                            <select name="part_profit[]" required class="form-select"
+                                                                style="background-image: none; padding-right: 0.75rem;">
+                                                                <option value="1">Yes</option>
+                                                                <option value="0">No</option>
+                                                            </select>
+                                                        </td>
                                                         <input type="hidden" name="part_id[]"
                                                             value="{{ $part->id }}">
                                                     </tr>
@@ -325,6 +351,7 @@
                                                     </th>
                                                     <th class="text-end no-padding text-center">
                                                         {{ number_format(round($import->parts->sum('qty'), 4)) }}</th>
+                                                    <th></th>
                                                     <th></th>
                                                     <th></th>
                                                     <th></th>

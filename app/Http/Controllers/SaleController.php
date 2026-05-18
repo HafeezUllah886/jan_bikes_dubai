@@ -78,7 +78,6 @@ class SaleController extends Controller
                     $purchase->update([
                         'status' => 'Sold',
                     ]);
-                    $profit = $request->car_price[$key] - $purchase->price;
                     sale_cars::create(
                         [
                             'sale_id' => $sale->id,
@@ -89,9 +88,7 @@ class SaleController extends Controller
                             'price' => $request->car_price[$key],
                             'vcc' => $request->car_vcc[$key],
                             'total' => $request->car_total[$key],
-                            'profit' => $profit,
                             'date' => $request->date,
-                            'profit_type' => $request->car_profit[$key],
                         ]
                     );
                 }
@@ -101,7 +98,6 @@ class SaleController extends Controller
 
                 foreach ($parts as $key => $part) {
                     $part_purchase = parts_purchase::find($part);
-                    $profit = $request->part_price[$key] - $part_purchase->price;
                     sale_parts::create(
                         [
                             'sale_id' => $sale->id,
@@ -111,9 +107,7 @@ class SaleController extends Controller
                             'pprice' => $part_purchase->price,
                             'price' => $request->part_price[$key],
                             'amount' => $request->part_amount[$key],
-                            'profit' => $profit,
                             'date' => $request->date,
-                            'profit_type' => $request->part_profit[$key],
                         ]
                     );
 
