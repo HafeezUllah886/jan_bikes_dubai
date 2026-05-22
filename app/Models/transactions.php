@@ -12,6 +12,6 @@ class transactions extends Model
 
     public function account()
     {
-        return $this->belongsTo(accounts::class, 'accountID');
+        return $this->belongsTo(accounts::class, 'account_id');
     }
 }

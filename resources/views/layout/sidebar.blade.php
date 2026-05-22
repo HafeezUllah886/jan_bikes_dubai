@@ -127,6 +127,24 @@
                     </div>
                 </li>
                 <li class="nav-item">
+                    <a href="#sidebarReports" class="nav-link" data-bs-toggle="collapse" role="button"
+                        aria-expanded="false" aria-controls="sidebarReports" data-key="t-level-1.2">
+                        <i class="ri-file-chart-line"></i><span data-key="t-apps">Reports</span>
+                    </a>
+                    <div class="collapse menu-dropdown" id="sidebarReports">
+                        <ul class="nav nav-sm flex-column">
+                            <li class="nav-item">
+                                <a href="{{ route('reportLedger') }}" class="nav-link" data-key="t-level-2.1">
+                                    Ledger Report </a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="{{ route('reportProfitLoss') }}" class="nav-link" data-key="t-level-2.1">
+                                    Profit Loss Report </a>
+                            </li>
+                        </ul>
+                    </div>
+                </li>
+                <li class="nav-item">
                     <a href="#sidebarAccount" class="nav-link" data-bs-toggle="collapse" role="button"
                         aria-expanded="false" aria-controls="sidebarAccount" data-key="t-level-1.2">
                         <i class="ri-settings-2-line"></i><span data-key="t-apps">Accounts</span>

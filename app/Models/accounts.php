@@ -29,7 +29,7 @@ class accounts extends Model
 
     public function transactions()
     {
-        return $this->hasMany(transactions::class, 'accountID');
+        return $this->hasMany(transactions::class, 'account_id');
     }
 
     public function sale()
