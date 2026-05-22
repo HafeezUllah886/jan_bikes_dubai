@@ -7,6 +7,9 @@ use App\Models\accounts;
 use App\Models\auctions;
 use App\Models\imports;
 use App\Models\purchase;
+use App\Models\PartPurchaseExpenseProfit;
+use App\Models\parts_purchase;
+use App\Models\PurchaseExpenseProfit;
 use App\Models\transactions;
 use App\Models\yards;
 use Illuminate\Http\Request;
@@ -202,6 +205,140 @@ class PurchaseController extends Controller
 
             return redirect()->route('purchase.index')->with('error', $e->getMessage());
         }
+    }
+
+    /**
+     * Store expense or profit distributed across all items in an import
+     */
+    public function storeExpenseProfit(Request $request)
+    {
+        try {
+            $request->validate([
+                'import_id' => 'required|exists:imports,id',
+                'type' => 'required|in:expense,profit',
+                'bike_amount' => 'nullable|numeric|min:0',
+                'car_amount' => 'nullable|numeric|min:0',
+                'parts_amount' => 'nullable|numeric|min:0',
+                'date' => 'required|date',
+                'description' => 'nullable|string',
+            ]);
+
+            DB::beginTransaction();
+
+            $import = imports::findOrFail($request->import_id);
+            $type = $request->type;
+            $date = $request->date;
+            $description = $request->description;
+
+            // Handle Bikes
+            if ($request->bike_amount) {
+                $bikeCount = purchase::where('import_id', $import->id)
+                    ->where('type', 'Bike')
+                    ->count();
+
+                if ($bikeCount > 0) {
+                    $amountPerBike = $request->bike_amount / $bikeCount;
+                    $bikes = purchase::where('import_id', $import->id)
+                        ->where('type', 'Bike')
+                        ->get();
+
+                    foreach ($bikes as $bike) {
+                        PurchaseExpenseProfit::create([
+                            'purchase_id' => $bike->id,
+                            'type' => $type,
+                            'amount' => $amountPerBike,
+                            'date' => $date,
+                            'description' => $description,
+                        ]);
+                    }
+                }
+            }
+
+            // Handle Cars
+            if ($request->car_amount) {
+                $carCount = purchase::where('import_id', $import->id)
+                    ->where('type', 'Car')
+                    ->count();
+
+                if ($carCount > 0) {
+                    $amountPerCar = $request->car_amount / $carCount;
+                    $cars = purchase::where('import_id', $import->id)
+                        ->where('type', 'Car')
+                        ->get();
+
+                    foreach ($cars as $car) {
+                        PurchaseExpenseProfit::create([
+                            'purchase_id' => $car->id,
+                            'type' => $type,
+                            'amount' => $amountPerCar,
+                            'date' => $date,
+                            'description' => $description,
+                        ]);
+                    }
+                }
+            }
+
+            // Handle Parts
+            if ($request->parts_amount) {
+                $partsTotal = parts_purchase::where('import_id', $import->id)
+                    ->sum('qty');
+
+                if ($partsTotal > 0) {
+                    $amountPerPart = $request->parts_amount / $partsTotal;
+                    $parts = parts_purchase::where('import_id', $import->id)
+                        ->get();
+
+                    foreach ($parts as $part) {
+                        PartPurchaseExpenseProfit::create([
+                            'parts_purchase_id' => $part->id,
+                            'type' => $type,
+                            'amount' => $amountPerPart * $part->qty,
+                            'date' => $date,
+                            'description' => $description,
+                        ]);
+                    }
+                }
+            }
+
+            DB::commit();
+
+            return back()->with('success', 'Expense/Profit distributed successfully');
+        } catch (\Exception $e) {
+            DB::rollback();
+
+            return back()->with('error', $e->getMessage());
+        }
+    }
+
+    public function expenseProfit(purchase $purchase)
+    {
+        return view('purchase.partials.expense_profit_modal', compact('purchase'));
+    }
+
+    public function updateExpenseProfit(Request $request, PurchaseExpenseProfit $expenseProfit)
+    {
+        $request->validate([
+            'type' => 'required|in:expense,profit',
+            'amount' => 'required|numeric|min:0',
+            'date' => 'required|date',
+            'description' => 'nullable|string',
+        ]);
+
+        $expenseProfit->update([
+            'type' => $request->type,
+            'amount' => $request->amount,
+            'date' => $request->date,
+            'description' => $request->description,
+        ]);
+
+        return back()->with('success', 'Expense/Profit entry updated successfully');
+    }
+
+    public function deleteExpenseProfit(PurchaseExpenseProfit $expenseProfit)
+    {
+        $expenseProfit->delete();
+
+        return back()->with('success', 'Expense/Profit entry deleted successfully');
     }
 
     public function import(Request $request)

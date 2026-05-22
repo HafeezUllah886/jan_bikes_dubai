@@ -8,14 +8,9 @@ class PartPurchaseExpenseProfit extends Model
 {
     protected $guarded = [];
 
-    public function purchase()
+    public function partsPurchase()
     {
-        return $this->belongsTo(Purchase::class);
-    }
-
-    public function account()
-    {
-        return $this->belongsTo(accounts::class);
+        return $this->belongsTo(parts_purchase::class);
     }
 
     public function getAmountAttribute($value)

@@ -10,4 +10,8 @@ class parts_purchase extends Model
     use HasFactory;
     protected $guarded = [];
 
+    public function expenseProfits()
+    {
+        return $this->hasMany(PartPurchaseExpenseProfit::class);
+    }
 }

@@ -17,6 +17,7 @@ use Illuminate\Support\Facades\DB;
 use App\Imports\PurchasesImport;
 use App\Models\auctions;
 use App\Models\parts_purchase;
+use App\Models\PartPurchaseExpenseProfit;
 use App\Models\yards;
 use Maatwebsite\Excel\Facades\Excel;
 
@@ -224,6 +225,36 @@ class PartsPurchaseController extends Controller
         }
     }
 
+    public function expenseProfit(parts_purchase $parts_purchase)
+    {
+        return view('parts_purchase.partials.expense_profit_modal', ['purchase' => $parts_purchase]);
+    }
+
+    public function updateExpenseProfit(Request $request, PartPurchaseExpenseProfit $expenseProfit)
+    {
+        $request->validate([
+            'type' => 'required|in:expense,profit',
+            'amount' => 'required|numeric|min:0',
+            'date' => 'required|date',
+            'description' => 'nullable|string',
+        ]);
+
+        $expenseProfit->update([
+            'type' => $request->type,
+            'amount' => $request->amount,
+            'date' => $request->date,
+            'description' => $request->description,
+        ]);
+
+        return back()->with('success', 'Expense/Profit entry updated successfully');
+    }
+
+    public function deleteExpenseProfit(PartPurchaseExpenseProfit $expenseProfit)
+    {
+        $expenseProfit->delete();
+
+        return back()->with('success', 'Expense/Profit entry deleted successfully');
+    }
 
     public function import(Request $request)
     {

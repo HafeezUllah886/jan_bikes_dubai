@@ -41,6 +41,16 @@
                     <h3>Parts Purchases</h3>
                 </div>
                 <div class="card-body">
+                    @if (session('success'))
+                        <div class="alert alert-success">
+                            {{ session('success') }}
+                        </div>
+                    @endif
+                    @if (session('error'))
+                        <div class="alert alert-danger">
+                            {{ session('error') }}
+                        </div>
+                    @endif
                     @if ($errors->any())
                         <div class="alert alert-danger">
                             <ul>
@@ -78,9 +88,17 @@
                                                 <li>
                                                     <button class="dropdown-item"
                                                         onclick="newWindow('{{ route('purchase.show', $purchase->id) }}')"
-                                                        onclick=""><i
+                                                        type="button"><i
                                                             class="ri-eye-fill align-bottom me-2 text-muted"></i>
                                                         View
+                                                    </button>
+                                                </li>
+                                                <li>
+                                                    <button class="dropdown-item view-expense-profit"
+                                                        type="button"
+                                                        data-purchase-id="{{ $purchase->id }}">
+                                                        <i class="ri-file-list-3-line align-bottom me-2 text-muted"></i>
+                                                        Expense/Profit
                                                     </button>
                                                 </li>
 
@@ -99,6 +117,21 @@
     </div>
 
 
+    <div class="modal fade" id="expenseProfitModal" tabindex="-1" aria-labelledby="expenseProfitModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-xl modal-dialog-centered modal-dialog-scrollable">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="expenseProfitModalLabel">Parts Purchase Expense / Profit</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body py-0">
+                    <div class="text-center py-5">
+                        Loading expense/profit details...
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
     <!-- Default Modals -->
 @endsection
 
@@ -120,4 +153,36 @@
     <script src="{{ asset('assets/libs/datatable/pdfmake.min.js') }}"></script>
     <script src="{{ asset('assets/libs/datatable/jszip.min.js') }}"></script>
     <script src="{{ asset('assets/js/pages/datatables.init.js') }}"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            document.querySelectorAll('.view-expense-profit').forEach(function (button) {
+                button.addEventListener('click', function () {
+                    var purchaseId = this.dataset.purchaseId;
+                    var url = '/part_purchase/' + purchaseId + '/expense-profit';
+                    var modalBody = document.querySelector('#expenseProfitModal .modal-body');
+                    modalBody.innerHTML = '<div class="text-center py-5">Loading expense/profit details...</div>';
+
+                    fetch(url, {
+                        headers: {
+                            'X-Requested-With': 'XMLHttpRequest'
+                        }
+                    })
+                        .then(function (response) {
+                            if (!response.ok) {
+                                throw new Error('Network response was not ok');
+                            }
+                            return response.text();
+                        })
+                        .then(function (html) {
+                            modalBody.innerHTML = html;
+                            var expenseProfitModal = new bootstrap.Modal(document.getElementById('expenseProfitModal'));
+                            expenseProfitModal.show();
+                        })
+                        .catch(function () {
+                            modalBody.innerHTML = '<div class="alert alert-danger">Unable to load expense/profit details.</div>';
+                        });
+                });
+            });
+        });
+    </script>
 @endsection

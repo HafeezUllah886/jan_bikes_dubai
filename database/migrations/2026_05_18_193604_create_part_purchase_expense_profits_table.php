@@ -13,6 +13,11 @@ return new class extends Migration
     {
         Schema::create('part_purchase_expense_profits', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('parts_purchase_id')->constrained('parts_purchases')->onDelete('cascade');
+            $table->string('type');
+            $table->decimal('amount', 10, 2)->default(0);
+            $table->date('date');
+            $table->text('description')->nullable();
             $table->timestamps();
         });
     }
