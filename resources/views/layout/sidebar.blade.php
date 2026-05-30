@@ -78,6 +78,16 @@
                     </a>
                 </li> <!-- end Dashboard Menu -->
                 <li class="nav-item">
+                    <a class="nav-link menu-link" href="{{ route('stock.cars') }}">
+                        <i class="ri-car-line"></i> <span data-key="t-cars-stock">Cars Stock</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link menu-link" href="{{ route('stock.parts') }}">
+                        <i class="ri-tools-line"></i> <span data-key="t-parts-stock">Parts Stock</span>
+                    </a>
+                </li>
+                <li class="nav-item">
                     <a class="nav-link menu-link" href="#sale" data-bs-toggle="collapse" role="button"
                         aria-expanded="false" aria-controls="sidebarApps">
                         <i class="ri-shopping-cart-line"></i><span data-key="t-apps">Sale</span>
@@ -123,6 +133,10 @@
                                 <a href="{{ route('expenses.index') }}" class="nav-link" data-key="t-level-2.1">
                                     Expense </a>
                             </li>
+                            <li class="nav-item">
+                                <a href="{{ route('extra_profit.index') }}" class="nav-link" data-key="t-level-2.1">
+                                    Extra Profit </a>
+                            </li>
                         </ul>
                     </div>
                 </li>
@@ -133,10 +147,10 @@
                     </a>
                     <div class="collapse menu-dropdown" id="sidebarReports">
                         <ul class="nav nav-sm flex-column">
-                            <li class="nav-item">
+                            {{-- <li class="nav-item">
                                 <a href="{{ route('reportLedger') }}" class="nav-link" data-key="t-level-2.1">
                                     Ledger Report </a>
-                            </li>
+                            </li> --}}
                             <li class="nav-item">
                                 <a href="{{ route('reportProfitLoss') }}" class="nav-link" data-key="t-level-2.1">
                                     Profit Loss Report </a>

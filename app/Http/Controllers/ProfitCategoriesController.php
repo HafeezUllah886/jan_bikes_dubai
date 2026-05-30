@@ -2,17 +2,19 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\imports;
+use App\Models\profitCategories;
 use Illuminate\Http\Request;
 
-class ImportsController extends Controller
+class ProfitCategoriesController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        //
+        $cats = profitCategories::orderBy('name', 'asc')->get();
+
+        return view('finance.extra_profit.categories', compact('cats'));
     }
 
     /**
@@ -28,13 +30,15 @@ class ImportsController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        profitCategories::create($request->all());
+
+        return back()->with('msg', 'Category Created');
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(imports $imports)
+    public function show(profitCategories $categories)
     {
         //
     }
@@ -42,7 +46,7 @@ class ImportsController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(imports $imports)
+    public function edit(profitCategories $categories)
     {
         //
     }
@@ -50,15 +54,17 @@ class ImportsController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, imports $imports)
+    public function update(Request $request, $id)
     {
-        //
+        profitCategories::find($id)->update($request->all());
+
+        return back()->with('msg', 'Category Updated');
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(imports $imports)
+    public function destroy(profitCategories $categories)
     {
         //
     }

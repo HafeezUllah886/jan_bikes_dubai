@@ -1,13 +1,14 @@
 <?php
 
-use App\Http\Controllers\AccountsController;
 use App\Http\Controllers\AccountAdjustmentController;
+use App\Http\Controllers\AccountsController;
 use App\Http\Controllers\AdvancePaymentController;
-use App\Http\Controllers\DepositWithdrawController;
 use App\Http\Controllers\ExpenseCategoriesController;
 use App\Http\Controllers\ExpensesController;
+use App\Http\Controllers\ExtraProfitController;
 use App\Http\Controllers\PaymentReceivingController;
 use App\Http\Controllers\PaymentsController;
+use App\Http\Controllers\ProfitCategoriesController;
 use App\Http\Controllers\TransferController;
 use App\Http\Middleware\confirmPassword;
 use Illuminate\Support\Facades\Route;
@@ -38,6 +39,10 @@ Route::middleware('auth')->group(function () {
     Route::get('advance/delete/{ref}', [AdvancePaymentController::class, 'delete'])->name('advance.delete')->middleware(confirmPassword::class);
     Route::get('advance/item-delivered/{id}', [AdvancePaymentController::class, 'markAsItemDelivered'])->name('advance.item-delivered');
 
+    Route::resource('extraprofitCategories', ProfitCategoriesController::class);
+    Route::resource('extra_profit', ExtraProfitController::class);
+    Route::get('extra_profit/delete/{ref}', [ExtraProfitController::class, 'delete'])->name('extra_profit.delete')->middleware(confirmPassword::class);
+
     Route::get('/accountbalance/{id}', function ($id) {
         // Call your Laravel helper function here
         $result = getAccountBalance($id);
@@ -45,4 +50,3 @@ Route::middleware('auth')->group(function () {
         return response()->json(['data' => $result]);
     });
 });
-

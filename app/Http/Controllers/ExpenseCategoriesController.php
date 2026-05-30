@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Models\expenseCategories;
 use Illuminate\Http\Request;
-use PHPUnit\Framework\Attributes\BackupGlobals;
 
 class ExpenseCategoriesController extends Controller
 {
@@ -15,7 +14,7 @@ class ExpenseCategoriesController extends Controller
     {
         $cats = expenseCategories::orderBy('name', 'asc')->get();
 
-        return view('Finance.expense.categories', compact('cats'));
+        return view('finance.expense.categories', compact('cats'));
     }
 
     /**
@@ -32,6 +31,7 @@ class ExpenseCategoriesController extends Controller
     public function store(Request $request)
     {
         expenseCategories::create($request->all());
+
         return back()->with('msg', 'Category Created');
     }
 
@@ -57,6 +57,7 @@ class ExpenseCategoriesController extends Controller
     public function update(Request $request, $id)
     {
         expenseCategories::find($id)->update($request->all());
+
         return back()->with('msg', 'Category Updated');
     }
 

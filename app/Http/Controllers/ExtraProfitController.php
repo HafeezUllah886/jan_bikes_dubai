@@ -3,13 +3,13 @@
 namespace App\Http\Controllers;
 
 use App\Models\accounts;
-use App\Models\expenseCategories;
-use App\Models\expenses;
+use App\Models\extra_profit;
+use App\Models\profitCategories;
 use App\Models\transactions;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
-class ExpensesController extends Controller
+class ExtraProfitController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -18,11 +18,11 @@ class ExpensesController extends Controller
     {
         $from = $request->from ?? firstDayOfMonth();
         $to = $request->to ?? lastDayOfMonth();
-        $expenses = expenses::whereBetween('date', [$from, $to])->orderby('id', 'desc')->get();
+        $profits = extra_profit::whereBetween('date', [$from, $to])->orderby('id', 'desc')->get();
         $accounts = accounts::business()->get();
-        $categories = expenseCategories::all();
+        $categories = profitCategories::all();
 
-        return view('finance.expense.index', compact('expenses', 'accounts', 'categories', 'from', 'to'));
+        return view('finance.extra_profit.index', compact('profits', 'accounts', 'categories', 'from', 'to'));
     }
 
     /**
@@ -41,7 +41,7 @@ class ExpensesController extends Controller
         try {
             DB::beginTransaction();
             $ref = getRef();
-            expenses::create(
+            extra_profit::create(
                 [
                     'accountID' => $request->accountID,
                     'amount' => $request->amount,
@@ -52,11 +52,11 @@ class ExpensesController extends Controller
                 ]
             );
 
-            createTransaction($request->accountID, $request->date, 0, $request->amount, 'Expense - '.$request->notes, $ref);
+            createTransaction($request->accountID, $request->date, $request->amount, 0, 'Extra Profit - '.$request->notes, $ref);
 
             DB::commit();
 
-            return back()->with('success', 'Expense Saved');
+            return back()->with('success', 'Extra Profit Saved');
         } catch (\Exception $e) {
             DB::rollBack();
 
@@ -67,7 +67,7 @@ class ExpensesController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(expenses $expenses)
+    public function show(extra_profit $extra_profit)
     {
         //
     }
@@ -75,7 +75,7 @@ class ExpensesController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(expenses $expenses)
+    public function edit(extra_profit $extra_profit)
     {
         //
     }
@@ -83,7 +83,7 @@ class ExpensesController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, expenses $expenses)
+    public function update(Request $request, extra_profit $extra_profit)
     {
         //
     }
@@ -95,17 +95,17 @@ class ExpensesController extends Controller
     {
         try {
             DB::beginTransaction();
-            expenses::where('refID', $ref)->delete();
+            extra_profit::where('refID', $ref)->delete();
             transactions::where('refID', $ref)->delete();
             DB::commit();
             session()->forget('confirmed_password');
 
-            return redirect()->route('expenses.index')->with('success', 'Expense Deleted');
+            return redirect()->route('extra_profit.index')->with('success', 'Extra Profit Deleted');
         } catch (\Exception $e) {
             DB::rollBack();
             session()->forget('confirmed_password');
 
-            return redirect()->route('expenses.index')->with('error', $e->getMessage());
+            return redirect()->route('extra_profit.index')->with('error', $e->getMessage());
         }
     }
 }
