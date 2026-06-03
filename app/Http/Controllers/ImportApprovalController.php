@@ -76,13 +76,13 @@ class ImportApprovalController extends Controller
                         'sale_price' => $request->car_sale_price[$key],
                         'min_price' => $request->car_sale_min_price[$key],
                         'notes' => $car->notes,
-                        'status' => 'Available',
                         'type' => $car->type,
                         'purchase_type' => 'Import',
                         'import_id' => $id,
                         'refID' => $ref,
                         'vendor_id' => 2,
                         'profitable' => $request->car_profit[$key],
+                        'status' => $request->car_booked[$key] == 1 ? 'Booked' : 'Available',
                     ]);
                 }
             }

@@ -30,6 +30,7 @@
                                                 <th width="">Chassis</th>
                                                 <th class="text-start">Company</th>
                                                 <th class="text-start">Model</th>
+                                                <th class="text-start">Status</th>
                                                 <th width="" class="text-center">Min Price</th>
                                                 <th width="" class="text-center">Price</th>
                                                 <th width="" class="text-center">VCC</th>
@@ -47,6 +48,7 @@
                                                         <td class="no-padding">{{ $product->chassis }}</td>
                                                         <td class="no-padding">{{ $product->company }}</td>
                                                         <td class="no-padding">{{ $product->model }}</td>
+                                                        <td class="no-padding">{{ $product->status }}</td>
                                                         <td class="no-padding">{{ $product->min_price }}</td>
                                                         <td class="no-padding"><input type="number" name="car_price[]"
                                                                 id="car_price_{{ $product->id }}"
@@ -67,10 +69,10 @@
                                             </tbody>
                                             <tfoot>
                                                 <tr>
-                                                    <th colspan="5" class="text-end no-padding">Total</th>
+                                                    <th colspan="9" class="text-end no-padding">Total</th>
                                                     <th class="text-end no-padding" id="totalPrice">
                                                         {{ number_format($products->sum('total'), 2) }}</th>
-                                                    <th class="no-padding"></th>
+
                                                 </tr>
                                             </tfoot>
                                         </table>

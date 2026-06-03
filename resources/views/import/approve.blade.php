@@ -53,9 +53,10 @@
                                                     <th class='no-padding'>Japan Expense</th>
                                                     <th class='no-padding'>Dubai Expense</th>
                                                     <th class='no-padding'>Net Cost</th>
-                                                    <th class='no-padding'>Sale Price</th>
-                                                    <th class='no-padding'>Min Price</th>
+                                                    <th class='no-padding'>S-Price</th>
+                                                    <th class='no-padding'>M-Price</th>
                                                     <th class='no-padding' style="width: 80px;">Profit %</th>
+                                                    <th class='no-padding'>Booked</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
@@ -143,6 +144,13 @@
                                                                     <option value="0">No</option>
                                                                 </select>
                                                             </td>
+                                                            <td class="text-end no-padding">
+                                                                <select name="car_booked[]" required class="form-select"
+                                                                    style="background-image: none; padding-right: 0.75rem;">
+                                                                    <option value="1">Yes</option>
+                                                                    <option value="0" selected>No</option>
+                                                                </select>
+                                                            </td>
                                                             <input type="hidden" name="car_id[]"
                                                                 value="{{ $car->id }}">
                                                         </tr>
@@ -164,6 +172,7 @@
                                                     <th class="text-end no-padding">
                                                         {{ number_format(round($import->cars->where('type', 'Car')->sum('price') + $expensePerCarJapan * $total_cars + $expensePerCarDubai * $total_cars, 4)) }}
                                                     </th>
+                                                    <th></th>
                                                     <th></th>
                                                     <th></th>
                                                     <th></th>
@@ -192,6 +201,7 @@
                                                     <th class='no-padding'>Sale Price</th>
                                                     <th class='no-padding'>Min Price</th>
                                                     <th class='no-padding' style="width: 80px;">Profit</th>
+                                                    <th class='no-padding'>Booked</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
@@ -242,6 +252,13 @@
                                                                     <option value="0">No</option>
                                                                 </select>
                                                             </td>
+                                                            <td class="text-end no-padding">
+                                                                <select name="car_booked[]" required class="form-select"
+                                                                    style="background-image: none; padding-right: 0.75rem;">
+                                                                    <option value="1">Yes</option>
+                                                                    <option value="0" selected>No</option>
+                                                                </select>
+                                                            </td>
                                                             <input type="hidden" name="car_id[]"
                                                                 value="{{ $car->id }}">
                                                         </tr>
@@ -263,6 +280,7 @@
                                                     <th class="text-end no-padding">
                                                         {{ number_format(round($import->cars->where('type', 'Bike')->sum('price') + $expensePerBikeJapan * $total_bikes + $expensePerBikeDubai * $total_bikes, 4)) }}
                                                     </th>
+                                                    <th class="text-end no-padding"></th>
                                                     <th class="text-end no-padding"></th>
                                                     <th class="text-end no-padding"></th>
                                                     <th class="text-end no-padding"></th>

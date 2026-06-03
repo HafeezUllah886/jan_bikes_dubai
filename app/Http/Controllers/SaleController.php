@@ -39,7 +39,7 @@ class SaleController extends Controller
      */
     public function create()
     {
-        $products = purchase::where('status', 'Available')->get();
+        $products = purchase::where('status', '!=', 'Sold')->get();
         update_parts_available_qty();
         $parts = parts_purchase::where('status', 'Available')->get();
         foreach ($parts as $part) {

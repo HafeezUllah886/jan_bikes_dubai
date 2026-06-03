@@ -71,6 +71,10 @@
                                     <h5 class="fs-14 mb-0">{{ number_format($purchase->sale_price) }}</h5>
                                 </div>
                                 <div class="col-lg-3 col-6">
+                                    <p class="text-muted mb-2 text-uppercase fw-semibold">Min Price</p>
+                                    <h5 class="fs-14 mb-0">{{ number_format($purchase->min_price) }}</h5>
+                                </div>
+                                <div class="col-lg-3 col-6">
                                     <p class="text-muted mb-2 text-uppercase fw-semibold">Invoice #</p>
                                     <h5 class="fs-14 mb-0">{{ $purchase->inv_no }}</h5>
                                 </div>
