@@ -12,7 +12,9 @@ class profitLossReportController extends Controller
 {
     public function index()
     {
-        return view('reports.profit_loss.index');
+        $invoices = purchase::orderBy('date', 'desc')->pluck('inv_no')->toArray();
+
+        return view('reports.profit_loss.index', compact('invoices'));
     }
 
     public function reportData(Request $request)
@@ -24,9 +26,14 @@ class profitLossReportController extends Controller
 
         $from = $request->from;
         $to = $request->to;
+        $inv = $request->invoice_id ?? 'all';
 
         $purchases = purchase::with(['expenseProfits', 'saleCar'])
             ->where('profitable', 1)
+            ->where('status', 'Sold')
+            ->when($inv !== 'all', function ($query) use ($inv) {
+                return $query->where('inv_no', $inv);
+            })
             ->whereBetween('date', [$from, $to])
             ->orderBy('date', 'asc')
             ->orderBy('id', 'asc')
