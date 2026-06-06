@@ -18,7 +18,7 @@
                             <input type="date" name="to" id="to" value="{{ lastDayOfMonth() }}"
                                 class="form-control">
                         </div>
-                        <select name="invoice_id" id="invoice_id" class="form-control selectize">
+                        <select name="invoice_id" id="invoice_id" class="selectize mt-2">
                             <option value="all">All Invoices</option>
                             @foreach ($invoices as $invoice)
                                 <option value="{{ $invoice }}">{{ $invoice }}</option>
@@ -40,11 +40,6 @@
 @section('page-js')
     <script src="{{ asset('assets/libs/selectize/selectize.min.js') }}"></script>
     <script>
-        $(".selectize").selectize({
-            plugins: ['remove_button'],
-            maxItems: null,
-            create: false,
-            placeholder: 'Select Vendors...'
-        });
+        $(".selectize").selectize();
     </script>
 @endsection
