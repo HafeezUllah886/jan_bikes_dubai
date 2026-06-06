@@ -34,7 +34,9 @@ class profitLossReportController extends Controller
             ->when($inv !== 'all', function ($query) use ($inv) {
                 return $query->where('inv_no', $inv);
             })
-            ->whereBetween('date', [$from, $to])
+            ->when($inv === 'all', function ($query) use ($from, $to) {
+                return $query->whereBetween('date', [$from, $to]);
+            })
             ->orderBy('date', 'asc')
             ->orderBy('id', 'asc')
             ->get();
