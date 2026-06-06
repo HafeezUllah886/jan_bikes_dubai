@@ -45,8 +45,8 @@ class profitLossReportController extends Controller
         $extra_profits = extra_profit::whereBetween('date', [$from, $to])->sum('amount');
 
         if ($inv !== 'all') {
-            $from = $purchases->first()->date ?? firstDayOfMonth();
-            $to = $purchases->last()->date ?? lastDayOfMonth();
+            $from = $purchases->first()->date ?? firstDayOfCurrentYear();
+            $to = $purchases->last()->date ?? lastDayOfCurrentYear();
             $expenses = expenses::whereBetween('date', [$from, $to])->sum('amount');
             $extra_profits = extra_profit::whereBetween('date', [$from, $to])->sum('amount');
         }
