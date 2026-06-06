@@ -8,5 +8,8 @@ use Illuminate\Database\Eloquent\Model;
 class expenseCategories extends Model
 {
     use HasFactory;
+
+    protected $table = 'expense_categories';
+
     protected $guarded = [];
 }
