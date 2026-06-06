@@ -18,12 +18,16 @@
                             <input type="date" name="to" id="to" value="{{ lastDayOfMonth() }}"
                                 class="form-control">
                         </div>
-                        <select name="invoice_id" id="invoice_id" class="selectize mt-2">
-                            <option value="all">All Invoices</option>
-                            @foreach ($invoices as $invoice)
-                                <option value="{{ $invoice }}">{{ $invoice }}</option>
-                            @endforeach
-                        </select>
+
+                        <div class="form-group mt-2">
+                            <label for="invoice_id">Invoice No.</label>
+                            <select name="invoice_id" id="invoice_id" class="selectize mt-2">
+                                <option value="all">All Invoices</option>
+                                @foreach ($invoices as $invoice)
+                                    <option value="{{ $invoice }}">{{ $invoice }}</option>
+                                @endforeach
+                            </select>
+                        </div>
 
                         <div class="form-group mt-2">
                             <button class="btn btn-success w-100" id="viewBtn">View Report</button>
