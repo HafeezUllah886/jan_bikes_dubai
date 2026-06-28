@@ -6,8 +6,7 @@
                 <div class="row">
                     <div class="col-lg-12">
                         <div class="hstack gap-2 justify-content-end d-print-none p-2 mt-4">
-                            <button class="btn btn-success ml-4" data-bs-toggle="modal"
-                                data-bs-target="#distributionModal">Distribute</button>
+                            <button class="btn btn-success ml-4" onclick="window.print()"><i class="ri-printer-line"></i> Print</button>
                         </div>
                         <div class="card-header border-bottom-dashed p-4">
                             <div class="d-flex">
@@ -24,12 +23,12 @@
                         <div class="card-body p-4">
                             <div class="row g-3">
                                 <div class="col-lg-3 col-6">
-                                    <p class="text-muted mb-2 text-uppercase fw-semibold">Dates</p>
-                                    <h5 class="fs-14 mb-0"><small class="text-muted" id="invoice-time">From </small><span
-                                            id="invoice-date">{{ date('d M Y', strtotime($from)) }}</span> </h5>
-                                    <h5 class="fs-14 mb-0"><small class="text-muted" id="invoice-time">To
-                                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</small><span
-                                            id="invoice-date">{{ date('d M Y', strtotime($to)) }}</span> </h5>
+                                    <p class="text-muted mb-2 text-uppercase fw-semibold">Distribution Date</p>
+                                    <h5 class="fs-14 mb-0"><span id="invoice-date">{{ date('d M Y', strtotime($profit_distribution->date)) }}</span> </h5>
+                                </div>
+                                <div class="col-lg-3 col-6">
+                                    <p class="text-muted mb-2 text-uppercase fw-semibold">Ref #</p>
+                                    <h5 class="fs-14 mb-0"><span id="invoice-date">{{ $profit_distribution->refID }}</span> </h5>
                                 </div>
                             </div>
                         </div>
@@ -328,61 +327,47 @@
             </div>
         </div>
 
-        <div id="distributionModal" class="modal fade" tabindex="-1" aria-labelledby="distributionModalLabel"
-            aria-hidden="true" style="display: none;">
-            <div class="modal-dialog modal-lg">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="distributionModalLabel">Distribute Profit</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"> </button>
+                        <div class="col-12 mt-4">
+                            <div class="card p-4">
+                                <div class="card-header">
+                                    <h3>Investor Distributions</h3>
+                                </div>
+                                <div class="table-responsive">
+                                    <table class="table table-borderless text-center table-nowrap align-middle mb-0">
+                                        <thead>
+                                            <tr class="table-active">
+                                                <th>#</th>
+                                                <th>Investor</th>
+                                                <th>Percentage</th>
+                                                <th>Amount</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @foreach ($profit_distribution->details as $key => $detail)
+                                                <tr>
+                                                    <td>{{ $key + 1 }}</td>
+                                                    <td>{{ $detail->account->title }}</td>
+                                                    <td>{{ $detail->percentage }}%</td>
+                                                    <td>{{ number_format($detail->amount, 2) }}</td>
+                                                </tr>
+                                            @endforeach
+                                        </tbody>
+                                        <tfoot>
+                                            <tr>
+                                                <th colspan="3" class="text-end p-1 m-0">Total</th>
+                                                <th class="p-1 m-0">
+                                                    {{ number_format($profit_distribution->details->sum('amount'), 2) }}
+                                                </th>
+                                            </tr>
+                                        </tfoot>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
                     </div>
-                    <form action="{{ route('profit_distribution.store') }}" method="post">
-                        @csrf
-                        <div class="modal-body">
-                            <input type="hidden" name="vehicle_profit" value="{{ $totalNetProfitLoss }}">
-                            <input type="hidden" name="parts_profit" value="{{ $part_profit }}">
-                            <input type="hidden" name="extra_profit" value="{{ $extra_profits->sum('amount') }}">
-                            <input type="hidden" name="expenses" value="{{ $expenses->sum('amount') }}">
-                            <input type="hidden" name="net_profit" id="netProfit"
-                                value="{{ $totalNetProfitLoss + $part_profit + $extra_profits->sum('amount') - $expenses->sum('amount') }}">
-                            
-                            <input type="hidden" name="purchase_ids" value="{{ json_encode($purchases->pluck('id')) }}">
-                            <input type="hidden" name="part_sale_ids" value="{{ json_encode($parts_sales->pluck('id')) }}">
-                            <input type="hidden" name="expense_ids" value="{{ json_encode($expenses->pluck('id')) }}">
-                            <input type="hidden" name="extra_profit_ids" value="{{ json_encode($extra_profits->pluck('id')) }}">
-                            
-                            <table class="table table-striped table-bordered text-center w-100">
-                                <thead>
-                                    <tr>
-                                        <th>Investor</th>
-                                        <th>Percentage</th>
-                                        <th>Amount</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    @foreach ($investors as $investor)
-                                        <tr>
-                                            <input type="hidden" name="investor_id[]" value="{{ $investor->id }}">
-                                            <td>{{ $investor->title }}</td>
-                                            <td><input type="number" step="any" min="0" max="100"
-                                                    name="percentage[]" required oninput="calcAmount()" value="0"
-                                                    class="form-control percentage-input">
-                                            </td>
-                                            <td><input type="number" step="any" min="0" name="amount[]"
-                                                    readonly class="form-control amount-input"></td>
-                                        </tr>
-                                    @endforeach
-                                </tbody>
-                            </table>
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-light" data-bs-dismiss="modal">Close</button>
-                            <button type="submit" class="btn btn-primary">Save</button>
-                        </div>
-                    </form>
-                </div><!-- /.modal-content -->
-            </div><!-- /.modal-dialog -->
-        </div><!-- /.modal -->
+                </div>
+            </div>
+        </div>
     @endsection
 
     @section('page-css')
@@ -401,17 +386,4 @@
         <script src="{{ asset('assets/libs/datatable/pdfmake.min.js') }}"></script>
         <script src="{{ asset('assets/libs/datatable/jszip.min.js') }}"></script>
         <script src="{{ asset('assets/js/pages/datatables.init.js') }}"></script>
-        <script>
-            function calcAmount() {
-                const profit = Number(document.getElementById('netProfit').value);
-                const percentages = document.querySelectorAll('input[name="percentage[]"]');
-                const amounts = document.querySelectorAll('input[name="amount[]"]');
-
-                percentages.forEach((percent, index) => {
-                    const p = parseFloat(percent.value);
-                    const calculated = (profit * p) / 100;
-                    amounts[index].value = isNaN(calculated) ? 0 : calculated.toFixed(2);
-                });
-            }
-        </script>
     @endsection

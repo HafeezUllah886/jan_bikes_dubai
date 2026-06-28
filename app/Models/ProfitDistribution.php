@@ -16,6 +16,7 @@ class ProfitDistribution extends Model
 
 class ProfitDistributionDetail extends Model
 {
+    protected $table = 'profit_distributions_details';
     protected $guarded = [];
 
     public function account()
