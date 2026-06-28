@@ -6,8 +6,8 @@
                 <div class="row">
                     <div class="col-lg-12">
                         <div class="hstack gap-2 justify-content-end d-print-none p-2 mt-4">
-                            <a href="javascript:window.print()" class="btn btn-success ml-4"><i
-                                    class="ri-printer-line mr-4"></i> Print</a>
+                            <button class="btn btn-success ml-4" data-bs-toggle="modal"
+                                data-bs-target="#distributionModal">Distribute</button>
                         </div>
                         <div class="card-header border-bottom-dashed p-4">
                             <div class="d-flex">
@@ -15,7 +15,7 @@
                                     <h1>{{ projectNameHeader() }}</h1>
                                 </div>
                                 <div class="flex-shrink-0 mt-sm-0 mt-3">
-                                    <h3>Profit Loss Report</h3>
+                                    <h3>Profit Loss Distribution</h3>
                                 </div>
                             </div>
                         </div>
@@ -30,11 +30,6 @@
                                     <h5 class="fs-14 mb-0"><small class="text-muted" id="invoice-time">To
                                             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</small><span
                                             id="invoice-date">{{ date('d M Y', strtotime($to)) }}</span> </h5>
-                                </div>
-
-                                <div class="col-lg-3 col-6">
-                                    <p class="text-muted mb-2 text-uppercase fw-semibold">Printed On</p>
-                                    <h5 class="fs-14 mb-0"><span id="total-amount">{{ date('d M Y') }}</span></h5>
                                 </div>
                             </div>
                         </div>
@@ -193,6 +188,86 @@
                                     </tfoot>
                                 </table>
                             </div>
+                            <div class="card-header">
+                                <h3>Extra Profit</h3>
+                            </div>
+                            <div class="table-responsive">
+                                <table class="table table-borderless text-center table-nowrap align-middle mb-0">
+                                    <thead>
+                                        <tr class="table-active">
+                                            <th>#</th>
+                                            <th>Ref #</th>
+                                            <th>Category</th>
+                                            <th>Account</th>
+                                            <th>Date</th>
+                                            <th>Notes</th>
+                                            <th>Amount</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="products-list">
+                                        @foreach ($extra_profits as $key => $tran)
+                                            <tr>
+                                                <td>{{ $key + 1 }}</td>
+                                                <td>{{ $tran->refID }}</td>
+                                                <td>{{ $tran->category->name }}</td>
+                                                <td>{{ $tran->account->title }}</td>
+                                                <td>{{ date('d M Y', strtotime($tran->date)) }}</td>
+                                                <td>{{ $tran->notes }}</td>
+                                                <td>{{ number_format($tran->amount) }}</td>
+
+                                            </tr>
+                                        @endforeach
+                                    </tbody>
+                                    <tfoot>
+                                        <tr>
+                                            <th colspan="6" class="text-end p-1 m-0">Total</th>
+                                            <th class="text-end p-1 m-0">
+                                                {{ number_format($extra_profits->sum('amount'), 2) }}
+                                            </th>
+                                        </tr>
+                                    </tfoot>
+                                </table>
+                            </div>
+                            <div class="card-header">
+                                <h3>Expenses</h3>
+                            </div>
+                            <div class="table-responsive">
+                                <table class="table table-borderless text-center table-nowrap align-middle mb-0">
+                                    <thead>
+                                        <tr class="table-active">
+                                            <th>#</th>
+                                            <th>Ref #</th>
+                                            <th>Category</th>
+                                            <th>Account</th>
+                                            <th>Date</th>
+                                            <th>Notes</th>
+                                            <th>Amount</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="products-list">
+                                        @foreach ($expenses as $key => $tran)
+                                            <tr>
+                                                <td>{{ $key + 1 }}</td>
+                                                <td>{{ $tran->refID }}</td>
+                                                <td>{{ $tran->category->name }}</td>
+                                                <td>{{ $tran->account->title }}</td>
+                                                <td>{{ date('d M Y', strtotime($tran->date)) }}</td>
+                                                <td>{{ $tran->notes }}</td>
+                                                <td>{{ number_format($tran->amount) }}</td>
+                                            </tr>
+                                        @endforeach
+                                    </tbody>
+                                    <tfoot>
+                                        <tr>
+                                            <th colspan="6" class="text-end p-1 m-0">Total</th>
+                                            <th class="text-end p-1 m-0">
+                                                {{ number_format($expenses->sum('amount'), 2) }}
+                                            </th>
+                                        </tr>
+                                    </tfoot>
+                                </table>
+                            </div>
+
                         </div>
                     </div>
                     <div class="row mt-4 row-cols-5 g-3">
@@ -221,7 +296,7 @@
                             <div class="card p-4">
                                 <div class="card-header">
                                     <h3>Extra Profit</h3>
-                                    <h5>{{ number_format($extra_profits, 2) }}</h5>
+                                    <h5>{{ number_format($extra_profits->sum('amount'), 2) }}</h5>
 
                                 </div>
 
@@ -231,7 +306,7 @@
                             <div class="card p-4">
                                 <div class="card-header">
                                     <h3>Expenses</h3>
-                                    <h5>{{ number_format($expenses, 2) }}</h5>
+                                    <h5>{{ number_format($expenses->sum('amount'), 2) }}</h5>
 
                                 </div>
 
@@ -241,7 +316,7 @@
                             <div class="card p-4">
                                 <div class="card-header">
                                     <h3>Net Profit</h3>
-                                    <h5>{{ number_format($totalNetProfitLoss + $part_profit + $extra_profits - $expenses, 2) }}
+                                    <h5>{{ number_format($totalNetProfitLoss + $part_profit + $extra_profits->sum('amount') - $expenses->sum('amount'), 2) }}
                                     </h5>
 
                                 </div>
@@ -252,6 +327,52 @@
                 </div>
             </div>
         </div>
+
+        <div id="distributionModal" class="modal fade" tabindex="-1" aria-labelledby="distributionModalLabel"
+            aria-hidden="true" style="display: none;">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="distributionModalLabel">Distribute Profit</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"> </button>
+                    </div>
+                    <form action="{{ route('profit_distribution.store') }}" method="post">
+                        @csrf
+                        <div class="modal-body">
+                            <input type="hidden" name="netProfit" id="netProfit"
+                                value="{{ $totalNetProfitLoss + $part_profit + $extra_profits->sum('amount') - $expenses->sum('amount') }}">
+                            <table class="table table-striped table-bordered text-center w-100">
+                                <thead>
+                                    <tr>
+                                        <th>Investor</th>
+                                        <th>Percentage</th>
+                                        <th>Amount</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach ($investors as $investor)
+                                        <tr>
+                                            <input type="hidden" name="investor_id[]" value="{{ $investor->id }}">
+                                            <td>{{ $investor->title }}</td>
+                                            <td><input type="number" step="any" min="0" max="100"
+                                                    name="percentage[]" required oninput="calcAmount()" value="0"
+                                                    class="form-control percentage-input">
+                                            </td>
+                                            <td><input type="number" step="any" min="0" name="amount[]"
+                                                    readonly class="form-control amount-input"></td>
+                                        </tr>
+                                    @endforeach
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-light" data-bs-dismiss="modal">Close</button>
+                            <button type="submit" class="btn btn-primary">Save</button>
+                        </div>
+                    </form>
+                </div><!-- /.modal-content -->
+            </div><!-- /.modal-dialog -->
+        </div><!-- /.modal -->
     @endsection
 
     @section('page-css')
@@ -270,4 +391,17 @@
         <script src="{{ asset('assets/libs/datatable/pdfmake.min.js') }}"></script>
         <script src="{{ asset('assets/libs/datatable/jszip.min.js') }}"></script>
         <script src="{{ asset('assets/js/pages/datatables.init.js') }}"></script>
+        <script>
+            function calcAmount() {
+                const profit = Number(document.getElementById('netProfit').value);
+                const percentages = document.querySelectorAll('input[name="percentage[]"]');
+                const amounts = document.querySelectorAll('input[name="amount[]"]');
+
+                percentages.forEach((percent, index) => {
+                    const p = parseFloat(percent.value);
+                    const calculated = (profit * p) / 100;
+                    amounts[index].value = isNaN(calculated) ? 0 : calculated.toFixed(2);
+                });
+            }
+        </script>
     @endsection

@@ -53,7 +53,8 @@
                                                         <td class="no-padding"><input type="number" name="car_price[]"
                                                                 id="car_price_{{ $product->id }}"
                                                                 class="form-control form-control-sm text-center"
-                                                                value="{{ $product->sale_price }}"></td>
+                                                                value="0" oninput="carTotal({{ $product->id }})">
+                                                        </td>
                                                         <td class="no-padding"><input type="number" name="car_vcc[]"
                                                                 id="car_vcc_{{ $product->id }}"
                                                                 class="form-control form-control-sm text-center"

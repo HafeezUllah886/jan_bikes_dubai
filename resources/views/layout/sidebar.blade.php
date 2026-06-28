@@ -137,6 +137,11 @@
                                 <a href="{{ route('extra_profit.index') }}" class="nav-link" data-key="t-level-2.1">
                                     Extra Profit </a>
                             </li>
+                            <li class="nav-item">
+                                <a href="{{ route('profit_distribution.index') }}" class="nav-link"
+                                    data-key="t-level-2.1">
+                                    Profit Distribution </a>
+                            </li>
                         </ul>
                     </div>
                 </li>
@@ -180,6 +185,10 @@
                             <li class="nav-item">
                                 <a href="{{ route('accountsList', 'Vendor') }}" class="nav-link"
                                     data-key="t-level-2.1"> Vendor </a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="{{ route('accountsList', 'Investor') }}" class="nav-link"
+                                    data-key="t-level-2.1"> Investors </a>
                             </li>
                         </ul>
                     </div>

@@ -27,6 +27,12 @@ class accounts extends Model
 
     }
 
+    public function scopeInvestor($query)
+    {
+        return $query->where('type', 'Investor');
+
+    }
+
     public function transactions()
     {
         return $this->hasMany(transactions::class, 'account_id');

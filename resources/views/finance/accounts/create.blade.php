@@ -33,11 +33,12 @@
                                         <option value="Business">Business</option>
                                         <option value="Customer">Customer</option>
                                         <option value="Vendor">Vendor</option>
+                                        <option value="Investor">Investor</option>
                                     </select>
                                 </div>
                             </div>
                             <div class="col-6 mt-2">
-                                <div class="form-group customer">
+                                <div class="form-group customer investor">
                                     <label for="contact">Contact #</label>
                                     <input type="text" name="contact" id="contact" value="{{ old('contact') }}"
                                         class="form-control">

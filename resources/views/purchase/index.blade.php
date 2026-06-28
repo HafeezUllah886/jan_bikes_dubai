@@ -120,6 +120,24 @@
                                                         View
                                                     </button>
                                                 </li>
+                                                @if ($purchase->status == 'Available')
+                                                    <li>
+                                                        <a class="dropdown-item"
+                                                            href="{{ route('markasbooked', $purchase->id) }}">
+                                                            <i class="ri-pencil-fill align-bottom me-2 text-muted"></i>
+                                                            Mark as Booked
+                                                        </a>
+                                                    </li>
+                                                @endif
+                                                @if ($purchase->status == 'Booked')
+                                                    <li>
+                                                        <a class="dropdown-item"
+                                                            href="{{ route('markasavailable', $purchase->id) }}">
+                                                            <i class="ri-pencil-fill align-bottom me-2 text-muted"></i>
+                                                            Mark as Available
+                                                        </a>
+                                                    </li>
+                                                @endif
                                                 <li>
                                                     <button class="dropdown-item view-expense-profit" type="button"
                                                         data-purchase-id="{{ $purchase->id }}">

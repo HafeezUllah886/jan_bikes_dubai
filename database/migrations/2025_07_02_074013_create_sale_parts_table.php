@@ -21,6 +21,7 @@ return new class extends Migration
             $table->double('price');
             $table->double('amount');
             $table->date('date');
+            $table->boolean('is_profit_distributed')->default(false);
             $table->timestamps();
         });
     }

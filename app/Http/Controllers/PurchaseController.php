@@ -6,9 +6,9 @@ use App\Imports\PurchasesImport;
 use App\Models\accounts;
 use App\Models\auctions;
 use App\Models\imports;
-use App\Models\purchase;
 use App\Models\PartPurchaseExpenseProfit;
 use App\Models\parts_purchase;
+use App\Models\purchase;
 use App\Models\PurchaseExpenseProfit;
 use App\Models\transactions;
 use App\Models\yards;
@@ -354,6 +354,42 @@ class PurchaseController extends Controller
                 return back()->with('error', 'Invalid file extension');
             }
         } catch (\Exception $e) {
+            return back()->with('error', $e->getMessage());
+        }
+    }
+
+    public function markasbooked($id)
+    {
+        try {
+            DB::beginTransaction();
+            $purchase = purchase::find($id);
+            $purchase->update([
+                'status' => 'Booked',
+            ]);
+            DB::commit();
+
+            return back()->with('success', 'Purchase marked as booked');
+        } catch (\Exception $e) {
+            DB::rollback();
+
+            return back()->with('error', $e->getMessage());
+        }
+    }
+
+    public function markasavailable($id)
+    {
+        try {
+            DB::beginTransaction();
+            $purchase = purchase::find($id);
+            $purchase->update([
+                'status' => 'Available',
+            ]);
+            DB::commit();
+
+            return back()->with('success', 'Purchase marked as available');
+        } catch (\Exception $e) {
+            DB::rollback();
+
             return back()->with('error', $e->getMessage());
         }
     }

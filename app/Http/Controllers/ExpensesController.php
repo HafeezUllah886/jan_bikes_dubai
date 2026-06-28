@@ -108,4 +108,40 @@ class ExpensesController extends Controller
             return redirect()->route('expenses.index')->with('error', $e->getMessage());
         }
     }
+
+    public function storeBulk(Request $request)
+    {
+
+        try {
+            DB::beginTransaction();
+            $ref = getRef();
+            $dates = $request->date;
+            $amounts = $request->amount;
+            $total = 0;
+            foreach ($dates as $key => $date) {
+                if ($amounts[$key] > 0) {
+                    $amount = $amounts[$key];
+                    $total += $amount;
+                    expenses::create(
+                        [
+                            'accountID' => $request->accountID,
+                            'amount' => $amount,
+                            'date' => $date,
+                            'cat' => $request->catID,
+                            'notes' => $request->notes,
+                            'refID' => $ref,
+                        ]
+                    );
+                }
+            }
+            createTransaction($request->accountID, now(), 0, $total, 'Expense - '.$request->notes, $ref);
+            DB::commit();
+
+            return back()->with('success', 'Expenses Saved');
+        } catch (\Exception $e) {
+            DB::rollBack();
+
+            return back()->with('error', $e->getMessage());
+        }
+    }
 }

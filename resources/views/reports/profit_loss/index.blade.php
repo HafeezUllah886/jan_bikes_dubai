@@ -18,13 +18,11 @@
                             <input type="date" name="to" id="to" value="{{ lastDayOfMonth() }}"
                                 class="form-control">
                         </div>
-
                         <div class="form-group mt-2">
-                            <label for="invoice_id">Invoice No.</label>
-                            <select name="invoice_id" id="invoice_id" class="selectize mt-2">
-                                <option value="all">All Invoices</option>
-                                @foreach ($invoices as $invoice)
-                                    <option value="{{ $invoice }}">{{ $invoice }}</option>
+                            <label for="chassis_no">Chassis No.</label>
+                            <select name="chassis_no[]" id="chassis_no" multiple class="selectize">
+                                @foreach ($chassisNos as $chassisNo)
+                                    <option value="{{ $chassisNo }}">{{ $chassisNo }}</option>
                                 @endforeach
                             </select>
                         </div>
@@ -44,6 +42,11 @@
 @section('page-js')
     <script src="{{ asset('assets/libs/selectize/selectize.min.js') }}"></script>
     <script>
-        $(".selectize").selectize();
+        $(".selectize").selectize({
+            multiple: true,
+            maxItems: 10,
+            searchField: ['text'],
+            plugins: ['remove_button', 'restore_on_backspace']
+        });
     </script>
 @endsection

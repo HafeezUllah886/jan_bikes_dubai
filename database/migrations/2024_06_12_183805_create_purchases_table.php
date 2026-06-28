@@ -34,6 +34,7 @@ return new class extends Migration
             $table->bigInteger('refID');
             $table->boolean('profitable')->default(true);
             $table->foreignId('vendor_id')->constrained('accounts')->cascadeOnDelete();
+            $table->boolean('is_profit_distributed')->default(false);
             $table->timestamps();
         });
     }
