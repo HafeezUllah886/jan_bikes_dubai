@@ -67,36 +67,41 @@ class ProfitDistributionController extends Controller
             ]);
 
             foreach ($request->investor_id as $key => $investor_id) {
-                if ($request->amount[$key] > 0) {
+                if ($request->amount[$key] != 0) {
                     ProfitDistributionDetail::create([
                         'accountID' => $investor_id,
                         'percentage' => $request->percentage[$key],
-                        'amount' => $request->amount[$key],
+                        'profit_type' => $request->amount[$key] > 0 ? 'profit' : 'loss',
+                        'amount' => abs($request->amount[$key]),
                         'refID' => $profit_distribution->id,
                     ]);
-
-                    createTransaction($investor_id, date('Y-m-d'), $request->amount[$key], 0, 'Profit Distribution', $ref);
+                    if ($request->amount[$key] > 0) {
+                        createTransaction($investor_id, date('Y-m-d'), $request->amount[$key], 0, 'Profit Distribution', $ref);
+                    } else {
+                        $amount = abs($request->amount[$key]);
+                        createTransaction($investor_id, date('Y-m-d'), 0, $amount, 'Profit Distribution', $ref);
+                    }
                 }
             }
 
             $purchase_ids = json_decode($request->purchase_ids);
             if (! empty($purchase_ids)) {
-                purchase::whereIn('id', $purchase_ids)->update(['is_profit_distributed' => 1]);
+                purchase::whereIn('id', $purchase_ids)->update(['is_profit_distributed' => 1, 'distribution_id' => $profit_distribution->id]);
             }
 
             $part_sale_ids = json_decode($request->part_sale_ids);
             if (! empty($part_sale_ids)) {
-                sale_parts::whereIn('id', $part_sale_ids)->update(['is_profit_distributed' => 1]);
+                sale_parts::whereIn('id', $part_sale_ids)->update(['is_profit_distributed' => 1, 'distribution_id' => $profit_distribution->id]);
             }
 
             $expense_ids = json_decode($request->expense_ids);
             if (! empty($expense_ids)) {
-                expenses::whereIn('id', $expense_ids)->update(['is_profit_distributed' => 1]);
+                expenses::whereIn('id', $expense_ids)->update(['is_profit_distributed' => 1, 'distribution_id' => $profit_distribution->id]);
             }
 
             $extra_profit_ids = json_decode($request->extra_profit_ids);
             if (! empty($extra_profit_ids)) {
-                extra_profit::whereIn('id', $extra_profit_ids)->update(['is_profit_distributed' => 1]);
+                extra_profit::whereIn('id', $extra_profit_ids)->update(['is_profit_distributed' => 1, 'distribution_id' => $profit_distribution->id]);
             }
 
             DB::commit();
@@ -114,15 +119,15 @@ class ProfitDistributionController extends Controller
         $profit_distribution = ProfitDistribution::with('details.account')->findOrFail($id);
 
         $purchases = purchase::with(['expenseProfits', 'saleCar'])
-            ->where('profit_distribution_id', $id)
+            ->where('distribution_id', $id)
             ->get();
 
         $parts_sales = sale_parts::with('purchase')
-            ->where('profit_distribution_id', $id)
+            ->where('distribution_id', $id)
             ->get();
 
-        $expenses = expenses::where('profit_distribution_id', $id)->get();
-        $extra_profits = extra_profit::where('profit_distribution_id', $id)->get();
+        $expenses = expenses::where('distribution_id', $id)->get();
+        $extra_profits = extra_profit::where('distribution_id', $id)->get();
 
         return view('finance.profit_distribution.show', compact('profit_distribution', 'purchases', 'parts_sales', 'expenses', 'extra_profits'));
     }

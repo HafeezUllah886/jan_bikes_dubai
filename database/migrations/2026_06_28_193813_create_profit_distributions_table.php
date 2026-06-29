@@ -24,6 +24,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('accountID')->constrained('accounts')->cascadeOnDelete();
             $table->decimal('percentage', 5, 2)->default(0);
+            $table->enum('profit_type', ['profit', 'loss'])->default('profit');
             $table->decimal('amount', 10, 2)->default(0);
             $table->bigInteger('refID');
             $table->timestamps();

@@ -22,6 +22,7 @@ return new class extends Migration
             $table->double('amount');
             $table->date('date');
             $table->boolean('is_profit_distributed')->default(false);
+            $table->bigInteger('distribution_id')->nullable();
             $table->timestamps();
         });
     }

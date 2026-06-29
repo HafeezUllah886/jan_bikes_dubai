@@ -19,6 +19,7 @@ return new class extends Migration
             $table->float('amount');
             $table->text('notes');
             $table->boolean('is_profit_distributed')->default(false);
+            $table->bigInteger('distribution_id')->nullable();
             $table->bigInteger('refID');
             $table->timestamps();
         });

@@ -3,7 +3,6 @@
 namespace Database\Seeders;
 
 use App\Models\accounts;
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
 class accountsSeeder extends Seeder
@@ -14,28 +13,39 @@ class accountsSeeder extends Seeder
     public function run(): void
     {
         accounts::create([
-            'title' => "Cash",
-            'type' => "Business",
-            'status' => "Active",
+            'title' => 'Cash',
+            'type' => 'Business',
+            'status' => 'Active',
         ]);
 
         accounts::create([
-            'title' => "Jan Brothers",
-            'type' => "Vendor",
-            'address' => "",
-            'contact' => "",
-            'status' => "Active",
+            'title' => 'Jan Brothers',
+            'type' => 'Vendor',
+            'address' => '',
+            'contact' => '',
+            'status' => 'Active',
         ]);
 
         accounts::create([
-            'title' => "Walk-in Customer",
-            'type' => "Customer",
-            'address' => "",
-            'contact' => "",
-            'status' => "Active",
+            'title' => 'Walk-in Customer',
+            'type' => 'Customer',
+            'address' => '',
+            'contact' => '',
+            'status' => 'Active',
         ]);
-
-      
-        
+        accounts::create([
+            'title' => '1st Investor',
+            'type' => 'Investor',
+            'address' => '',
+            'contact' => '',
+            'status' => 'Active',
+        ]);
+        accounts::create([
+            'title' => '2nd Investor',
+            'type' => 'Investor',
+            'address' => '',
+            'contact' => '',
+            'status' => 'Active',
+        ]);
     }
 }

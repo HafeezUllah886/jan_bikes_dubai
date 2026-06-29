@@ -2,8 +2,8 @@
 
 namespace Database\Seeders;
 
+use App\Models\expenseCategories;
 use App\Models\payment_categories;
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
 class payment_categories_seeder extends Seeder
@@ -14,12 +14,27 @@ class payment_categories_seeder extends Seeder
     public function run(): void
     {
         payment_categories::create([
-            'name'=>'Test Receiving Category',
-            'for'=>'Receive',
+            'name' => 'Test Receiving Category',
+            'for' => 'Receive',
         ]);
         payment_categories::create([
-            'name'=>'Test Payment Category',
-            'for'=>'Payment',
+            'name' => 'Test Payment Category',
+            'for' => 'Payment',
+        ]);
+        expenseCategories::create([
+            'name' => 'Salaries',
+        ]);
+        expenseCategories::create([
+            'name' => 'Rent',
+        ]);
+        expenseCategories::create([
+            'name' => 'Utility',
+        ]);
+        expenseCategories::create([
+            'name' => 'Packing',
+        ]);
+        expenseCategories::create([
+            'name' => 'Delivery Charges',
         ]);
     }
 }
