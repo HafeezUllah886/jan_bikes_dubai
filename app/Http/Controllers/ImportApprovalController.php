@@ -82,7 +82,6 @@ class ImportApprovalController extends Controller
                         'refID' => $ref,
                         'vendor_id' => 2,
                         'profitable' => $request->car_profit[$key],
-                        'status' => $request->car_booked[$key] == 1 ? 'Booked' : 'Available',
                     ]);
                 }
             }
