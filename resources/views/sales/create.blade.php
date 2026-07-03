@@ -63,7 +63,7 @@
                                                         <td class="no-padding"><input type="number" name="car_total[]"
                                                                 id="car_total_{{ $product->id }}"
                                                                 class="form-control form-control-sm text-center"
-                                                                value="{{ $product->sale_price }}"></td>
+                                                                value="0"></td>
 
                                                     </tr>
                                                 @endforeach
