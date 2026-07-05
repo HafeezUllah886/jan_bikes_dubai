@@ -122,14 +122,25 @@
                                                 </li>
                                                 @if ($purchase->status == 'Available')
                                                     <li>
-                                                        <a class="dropdown-item"
-                                                            href="{{ route('markasbooked', $purchase->id) }}">
+                                                        <a class="dropdown-item" href="javascript:void(0);" data-bs-toggle="modal" data-bs-target="#bookModal{{ $purchase->id }}">
                                                             <i class="ri-pencil-fill align-bottom me-2 text-muted"></i>
                                                             Mark as Booked
                                                         </a>
                                                     </li>
                                                 @endif
                                                 @if ($purchase->status == 'Booked')
+                                                    <li>
+                                                        <a class="dropdown-item" href="javascript:void(0);" data-bs-toggle="modal" data-bs-target="#sellBookedModal{{ $purchase->id }}">
+                                                            <i class="ri-shopping-cart-fill align-bottom me-2 text-muted"></i>
+                                                            Sell Booked Item
+                                                        </a>
+                                                    </li>
+                                                    <li>
+                                                        <a class="dropdown-item" href="javascript:void(0);" data-bs-toggle="modal" data-bs-target="#viewBookingModal{{ $purchase->id }}">
+                                                            <i class="ri-file-list-3-fill align-bottom me-2 text-muted"></i>
+                                                            View Booking
+                                                        </a>
+                                                    </li>
                                                     <li>
                                                         <a class="dropdown-item"
                                                             href="{{ route('markasavailable', $purchase->id) }}">
@@ -262,6 +273,144 @@
         </div>
     </div>
     <!-- Default Modals -->
+    @foreach ($purchases as $purchase)
+        <!-- Book Modal -->
+        <div class="modal fade" id="bookModal{{ $purchase->id }}" tabindex="-1" aria-labelledby="bookModalLabel{{ $purchase->id }}" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="bookModalLabel{{ $purchase->id }}">Book Purchase (Chassis: {{ $purchase->chassis }})</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <form action="{{ route('purchase.book', $purchase->id) }}" method="POST">
+                        @csrf
+                        <div class="modal-body">
+                            <div class="mb-3">
+                                <label for="customer_id" class="form-label">Customer</label>
+                                <select name="customer_id" class="form-select" required>
+                                    <option value="">Select Customer</option>
+                                    @foreach($customers as $customer)
+                                        <option value="{{ $customer->id }}">{{ $customer->title }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                            <div class="mb-3">
+                                <label for="price" class="form-label">Price</label>
+                                <input type="number" step="0.01" class="form-control" name="price" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="advance" class="form-label">Advance Amount</label>
+                                <input type="number" step="0.01" class="form-control" name="advance" value="0">
+                            </div>
+                            <div class="mb-3">
+                                <label for="date" class="form-label">Date</label>
+                                <input type="date" class="form-control" name="date" value="{{ date('Y-m-d') }}" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="notes" class="form-label">Notes</label>
+                                <textarea class="form-control" name="notes" rows="3"></textarea>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                            <button type="submit" class="btn btn-primary">Save Booking</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- View Booking Modal -->
+        @if ($purchase->status == 'Booked' && $purchase->booking)
+        <div class="modal fade" id="viewBookingModal{{ $purchase->id }}" tabindex="-1" aria-labelledby="viewBookingModalLabel{{ $purchase->id }}" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="viewBookingModalLabel{{ $purchase->id }}">Booking Details (Chassis: {{ $purchase->chassis }})</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <table class="table table-bordered">
+                            <tr>
+                                <th>Customer</th>
+                                <td>{{ $purchase->booking->customer->title ?? 'N/A' }}</td>
+                            </tr>
+                            <tr>
+                                <th>Price</th>
+                                <td>{{ number_format($purchase->booking->price, 2) }}</td>
+                            </tr>
+                            <tr>
+                                <th>Advance</th>
+                                <td>{{ number_format($purchase->booking->advance, 2) }}</td>
+                            </tr>
+                            <tr>
+                                <th>Date</th>
+                                <td>{{ \Carbon\Carbon::parse($purchase->booking->date)->format('Y-m-d') }}</td>
+                            </tr>
+                            <tr>
+                                <th>Notes</th>
+                                <td>{{ $purchase->booking->notes }}</td>
+                            </tr>
+                        </table>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Sell Booked Item Modal -->
+        <div class="modal fade" id="sellBookedModal{{ $purchase->id }}" tabindex="-1" aria-labelledby="sellBookedModalLabel{{ $purchase->id }}" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="sellBookedModalLabel{{ $purchase->id }}">Sell Booked Item (Chassis: {{ $purchase->chassis }})</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <form action="{{ route('purchase.sellBooked', $purchase->id) }}" method="POST">
+                        @csrf
+                        <div class="modal-body">
+                            <div class="mb-3">
+                                <label class="form-label">Customer</label>
+                                <input type="text" class="form-control" value="{{ $purchase->booking->customer->title ?? 'N/A' }}" readonly>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Advance Amount Paid</label>
+                                <input type="text" class="form-control" value="{{ number_format($purchase->booking->advance ?? 0, 2) }}" readonly>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Booking Price</label>
+                                <input type="text" class="form-control" value="{{ number_format($purchase->booking->price ?? 0, 2) }}" readonly>
+                            </div>
+                            <div class="mb-3">
+                                <label for="remaining_amount" class="form-label">Remaining Amount</label>
+                                <input type="number" step="0.01" class="form-control" name="remaining_amount" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="vcc" class="form-label">VCC Amount</label>
+                                <input type="number" step="0.01" class="form-control" name="vcc" value="0" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="date" class="form-label">Date</label>
+                                <input type="date" class="form-control" name="date" value="{{ date('Y-m-d') }}" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="notes" class="form-label">Notes</label>
+                                <textarea class="form-control" name="notes" rows="3"></textarea>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                            <button type="submit" class="btn btn-primary">Complete Sale</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        @endif
+    @endforeach
+
 @endsection
 
 @section('page-css')

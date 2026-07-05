@@ -5,11 +5,14 @@ namespace App\Http\Controllers;
 use App\Imports\PurchasesImport;
 use App\Models\accounts;
 use App\Models\auctions;
+use App\Models\Booking;
 use App\Models\imports;
 use App\Models\PartPurchaseExpenseProfit;
 use App\Models\parts_purchase;
 use App\Models\purchase;
 use App\Models\PurchaseExpenseProfit;
+use App\Models\sale_cars;
+use App\Models\sales;
 use App\Models\transactions;
 use App\Models\yards;
 use Illuminate\Http\Request;
@@ -43,7 +46,9 @@ class PurchaseController extends Controller
         $imports = purchase::whereNotNull('import_id')->distinct('import_id')->pluck('import_id')->toArray();
         $imports = imports::whereIn('id', $imports)->get();
 
-        return view('purchase.index', compact('purchases', 'start', 'end', 'inv_no', 'invoices', 'status', 'imports'));
+        $customers = accounts::customer()->get();
+
+        return view('purchase.index', compact('purchases', 'start', 'end', 'inv_no', 'invoices', 'status', 'imports', 'customers'));
     }
 
     /**
@@ -376,6 +381,54 @@ class PurchaseController extends Controller
         }
     }
 
+    public function bookPurchase(Request $request, $id)
+    {
+        try {
+            $request->validate([
+                'customer_id' => 'required|exists:accounts,id',
+                'price' => 'required|numeric|min:0',
+                'advance' => 'nullable|numeric|min:0',
+                'date' => 'required|date',
+                'notes' => 'nullable|string',
+            ]);
+
+            DB::beginTransaction();
+            $purchase = purchase::findOrFail($id);
+
+            $ref = getRef();
+
+            $booking = Booking::create([
+                'purchase_id' => $purchase->id,
+                'customer_id' => $request->customer_id,
+                'price' => $request->price,
+                'advance' => $request->advance ?? 0,
+                'date' => $request->date,
+                'notes' => $request->notes,
+                'refID' => $ref,
+            ]);
+
+            $purchase->update([
+                'status' => 'Booked',
+            ]);
+
+            createTransaction($request->customer_id, $request->date, $request->price, 0, 'Purchase Booked - Chassis No. '.$purchase->chassis, $ref);
+
+            if ($request->advance > 0) {
+                // If there's an advance, credit the customer for the advance payment.
+                // Assuming it's recorded against the same reference.
+                createTransaction($request->customer_id, $request->date, 0, $request->advance, 'Advance for Purchase Booked - Chassis No. '.$purchase->chassis, $ref);
+            }
+
+            DB::commit();
+
+            return back()->with('success', 'Purchase marked as booked successfully');
+        } catch (\Exception $e) {
+            DB::rollback();
+
+            return back()->with('error', $e->getMessage());
+        }
+    }
+
     public function markasavailable($id)
     {
         try {
@@ -384,9 +437,77 @@ class PurchaseController extends Controller
             $purchase->update([
                 'status' => 'Available',
             ]);
+
+            $booking = Booking::where('purchase_id', $purchase->id)->first();
+            if ($booking) {
+                $booking->delete();
+            }
+
+            transactions::where('refID', $purchase->refID)->delete();
+
             DB::commit();
 
             return back()->with('success', 'Purchase marked as available');
+        } catch (\Exception $e) {
+            DB::rollback();
+
+            return back()->with('error', $e->getMessage());
+        }
+    }
+
+    public function sellBooked(Request $request, $id)
+    {
+        try {
+            $request->validate([
+                'remaining_amount' => 'required|numeric|min:0',
+                'vcc' => 'required|numeric|min:0',
+                'date' => 'required|date',
+                'notes' => 'nullable|string',
+            ]);
+
+            DB::beginTransaction();
+            $purchase = purchase::findOrFail($id);
+            $booking = $purchase->booking;
+
+            if (! $booking) {
+                throw new \Exception('No booking found for this purchase.');
+            }
+
+            $total_sale_price = $booking->advance + $request->remaining_amount;
+            $total_with_vcc = $total_sale_price + $request->vcc;
+            $ref = getRef();
+
+            // Create formal Sale
+            $sale = sales::create([
+                'customer_id' => $booking->customer_id,
+                'date' => $request->date,
+                'total' => $total_with_vcc,
+                'refID' => $ref,
+            ]);
+
+            // Create Sale Car details
+            sale_cars::create([
+                'sale_id' => $sale->id,
+                'purchase_id' => $purchase->id,
+                'type' => $purchase->type,
+                'chassis' => $purchase->chassis,
+                'pprice' => $purchase->price,
+                'price' => $total_sale_price,
+                'vcc' => $request->vcc,
+                'total' => $total_with_vcc,
+                'date' => $request->date,
+            ]);
+
+            $purchase->update([
+                'status' => 'Sold',
+            ]);
+
+            // Create formal Sale transaction for the full amount
+            createTransaction($booking->customer_id, $request->date, 0, $request->remaining_amount, 'Sale from Booking - Chassis No. '.$purchase->chassis.($request->notes ? ' | '.$request->notes : ''), $ref);
+
+            DB::commit();
+
+            return redirect()->route('sale.index')->with('success', 'Booked item successfully sold');
         } catch (\Exception $e) {
             DB::rollback();
 

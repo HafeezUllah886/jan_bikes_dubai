@@ -27,4 +27,9 @@ class purchase extends Model
 
         return $this->total + $expense - $profit;
     }
+
+    public function booking()
+    {
+        return $this->hasOne(Booking::class, 'purchase_id');
+    }
 }

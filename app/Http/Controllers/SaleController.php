@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\accounts;
+use App\Models\Booking;
 use App\Models\export;
 use App\Models\export_cars;
 use App\Models\export_parts;
@@ -39,7 +40,7 @@ class SaleController extends Controller
      */
     public function create()
     {
-        $products = purchase::where('status', '!=', 'Sold')->get();
+        $products = purchase::where('status', 'Available')->get();
         update_parts_available_qty();
         $parts = parts_purchase::where('status', 'Available')->get();
         foreach ($parts as $part) {
@@ -300,6 +301,13 @@ class SaleController extends Controller
                 $purchase->update([
                     'status' => 'Available',
                 ]);
+
+                $booking = Booking::where('purchase_id', $car->purchase_id)->first();
+                if ($booking->refID) {
+                    transactions::where('refID', $booking->refID)->delete();
+                    $booking->delete();
+                }
+
             }
             foreach ($sale->sale_parts as $part) {
                 $purchase = parts_purchase::find($part->purchase_id);
@@ -307,6 +315,7 @@ class SaleController extends Controller
                     'status' => 'Available',
                 ]);
             }
+
             $sale->sale_parts()->delete();
             $sale->sale_cars()->delete();
             transactions::where('refID', $sale->refID)->delete();

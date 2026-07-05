@@ -14,7 +14,9 @@ Route::middleware('auth')->group(function () {
     Route::post('purchase/expense-profit/{expenseProfit}/update', [PurchaseController::class, 'updateExpenseProfit'])->name('purchase.expenseProfit.update');
     Route::post('purchase/expense-profit/{expenseProfit}/delete', [PurchaseController::class, 'deleteExpenseProfit'])->name('purchase.expenseProfit.delete');
 
-    Route::get('purchase/{id}/mark-as-booked', [PurchaseController::class, 'markasbooked'])->name('markasbooked');
+    Route::post('purchase/{id}/sell-booked', [PurchaseController::class, 'sellBooked'])->name('purchase.sellBooked');
+
+    Route::post('purchase/{id}/book', [PurchaseController::class, 'bookPurchase'])->name('purchase.book');
     Route::get('purchase/{id}/mark-as-available', [PurchaseController::class, 'markasavailable'])->name('markasavailable');
 
     Route::get('purchases/delete/{id}', [PurchaseController::class, 'destroy'])->name('purchases.delete')->middleware(confirmPassword::class);
