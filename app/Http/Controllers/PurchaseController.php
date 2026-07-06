@@ -414,8 +414,7 @@ class PurchaseController extends Controller
             createTransaction($request->customer_id, $request->date, $request->price, 0, 'Purchase Booked - Chassis No. '.$purchase->chassis, $ref);
 
             if ($request->advance > 0) {
-                // If there's an advance, credit the customer for the advance payment.
-                // Assuming it's recorded against the same reference.
+
                 createTransaction($request->customer_id, $request->date, 0, $request->advance, 'Advance for Purchase Booked - Chassis No. '.$purchase->chassis, $ref);
             }
 

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Booking;
 use App\Models\import_cars;
 use App\Models\import_parts;
 use App\Models\imports;
@@ -61,7 +62,7 @@ class ImportApprovalController extends Controller
                 foreach ($cars as $key => $car) {
                     $car = import_cars::findOrFail($car);
                     $total += $request->car_net_cost[$key];
-                    purchase::create([
+                    $purchase = purchase::create([
                         'inv_no' => $import->inv_no,
                         'meter_type' => $car->meter_type,
                         'company' => $car->company,
@@ -83,6 +84,35 @@ class ImportApprovalController extends Controller
                         'vendor_id' => 2,
                         'profitable' => $request->car_profit[$key],
                     ]);
+
+                    if ($car->booking_customer_id) {
+
+                        $customerExists = \App\Models\accounts::find($car->booking_customer_id);
+                        if (!$customerExists) {
+                            throw new \Exception("Customer for booking (ID: {$car->booking_customer_id}) does not exist.");
+                        }
+
+                        $booking = Booking::create([
+                            'purchase_id' => $purchase->id,
+                            'customer_id' => $car->booking_customer_id,
+                            'price' => $car->booking_price,
+                            'advance' => $car->booking_advance ?? 0,
+                            'date' => $car->booking_date ?? now(),
+                            'notes' => $car->booking_notes,
+                            'refID' => $ref,
+                        ]);
+
+                        $purchase->update([
+                            'status' => 'Booked',
+                        ]);
+
+                        createTransaction($car->booking_customer_id, $purchase->date, $car->booking_price, 0, 'Purchase Booked - Chassis No. '.$purchase->chassis, $ref);
+
+                        if ($car->booking_advance > 0) {
+
+                            createTransaction($car->booking_customer_id, $purchase->date, 0, $car->booking_advance, 'Advance for Purchase Booked - Chassis No. '.$purchase->chassis, $ref);
+                        }
+                    }
                 }
             }
             if ($parts) {
