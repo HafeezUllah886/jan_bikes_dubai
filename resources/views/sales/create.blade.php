@@ -23,6 +23,7 @@
                             <div class="col-lg-12">
                                 <div class="row">
                                     <div class="col-12">
+                                        <input type="text" id="searchInput" class="form-control mb-2" placeholder="Search by type, chassis, company, model...">
                                         <table class="table table-striped table-hover">
                                             <thead>
                                                 <th width="">Ser</th>
@@ -311,5 +312,22 @@
             $("#car_total_" + id).val(total.toFixed(2));
             updateTotal();
         }
+
+        $("#searchInput").on("keyup", function() {
+            var value = $(this).val().toLowerCase();
+            $("#products_list tr").filter(function() {
+                var type = $(this).find('td:eq(1)').text().toLowerCase();
+                var chassis = $(this).find('td:eq(2)').text().toLowerCase();
+                var company = $(this).find('td:eq(3)').text().toLowerCase();
+                var model = $(this).find('td:eq(4)').text().toLowerCase();
+                
+                var match = type.indexOf(value) > -1 || 
+                            chassis.indexOf(value) > -1 || 
+                            company.indexOf(value) > -1 || 
+                            model.indexOf(value) > -1;
+                            
+                $(this).toggle(match);
+            });
+        });
     </script>
 @endsection

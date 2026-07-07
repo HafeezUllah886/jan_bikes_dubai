@@ -111,21 +111,20 @@ class AccountsController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, accounts $account)
+    public function update(Request $request, $id)
     {
         $request->validate(
             [
-                'title' => 'required|unique:accounts,title,'.$request->accountID,
+                'title' => 'required|unique:accounts,title,'.$id,
             ],
             [
                 'title.required' => 'Please Enter Account Title',
                 'title.unique' => 'Account with this title already exists',
             ]
         );
-        $account = accounts::find($request->accountID)->update(
+        $account = accounts::find($id)->update(
             [
                 'title' => $request->title,
-                'category' => $request->category,
                 'contact' => $request->contact ?? null,
                 'address' => $request->address ?? null,
             ]
