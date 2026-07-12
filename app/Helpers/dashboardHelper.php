@@ -1,6 +1,8 @@
 <?php
 
 use App\Models\accounts;
+use App\Models\Booking;
+use App\Models\import_cars;
 use App\Models\purchase;
 use App\Models\purchase_details;
 use App\Models\sale_details;
@@ -12,7 +14,7 @@ function totalSales()
 
 function totalPurchases()
 {
-   return purchase::sum('net');
+    return purchase::sum('net');
 }
 
 function totalSaleGst()
@@ -27,23 +29,22 @@ function totalPurchaseGst()
 
 function myBalance()
 {
-    $accounts = accounts::where("type", "!=", "Customer")->get();
+    $accounts = accounts::where('type', '!=', 'Customer')->get();
     $balance = 0;
-    foreach($accounts as $account)
-    {
+    foreach ($accounts as $account) {
         $balance += getAccountBalance($account->id);
     }
 
-    $customers = accounts::where("type", "Customer")->get();
+    $customers = accounts::where('type', 'Customer')->get();
     $customersBalance = 0;
-    foreach($customers as $customer)
-    {
+    foreach ($customers as $customer) {
         $customersBalance += getAccountBalance($customer->id);
     }
 
     $accountsBalance = $balance - $customersBalance;
     $stockValue = stockValue();
     $balance = $accountsBalance + $stockValue;
+
     return $balance;
 }
 
@@ -54,12 +55,14 @@ function accountBalanceByType($type)
     foreach ($accounts as $account) {
         $balance += getAccountBalance($account->id);
     }
+
     return $balance;
 }
 
 function totalAdvanceBooked()
 {
-    $bookingAdvance = \App\Models\booking::sum('advance');
-    $importAdvance = \App\Models\import_cars::sum('booking_advance');
+    $bookingAdvance = Booking::sum('advance');
+    $importAdvance = import_cars::sum('booking_advance');
+
     return $bookingAdvance + $importAdvance;
 }
