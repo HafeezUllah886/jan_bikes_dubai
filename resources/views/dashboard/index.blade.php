@@ -4,58 +4,58 @@
     <div class="col-xl-12">
         <div class="card crm-widget">
             <div class="card-body p-0">
-                {{-- <div class="row row-cols-xxl-5 row-cols-md-3 row-cols-1 g-0">
+                <div class="row row-cols-xxl-5 row-cols-md-3 row-cols-1 g-0">
                     <div class="col">
                         <div class="py-4 px-3">
-                            <h5 class="text-muted text-uppercase fs-13">Purchases</h5>
+                            <h5 class="text-muted text-uppercase fs-13">Business Accounts</h5>
                             <div class="d-flex align-items-center">
                                 <div class="flex-grow-1 ms-3">
-                                    <h2 class="mb-0 cfs-22"><span class="counter-value" data-target="{{totalPurchases()}}">0</span></h2>
+                                    <h2 class="mb-0 cfs-22"><span class="counter-value" data-target="{{ accountBalanceByType('Business') }}">0</span></h2>
                                 </div>
                             </div>
                         </div>
                     </div>
                     <div class="col">
                         <div class="mt-3 mt-md-0 py-4 px-3">
-                            <h5 class="text-muted text-uppercase fs-13">Sales</h5>
+                            <h5 class="text-muted text-uppercase fs-13">Customer Accounts</h5>
                             <div class="d-flex align-items-center">
                                 <div class="flex-grow-1 ms-3">
-                                    <h2 class="mb-0 cfs-22"><span class="counter-value" data-target="{{totalSales()}}">0</span></h2>
+                                    <h2 class="mb-0 cfs-22"><span class="counter-value" data-target="{{ accountBalanceByType('Customer') }}">0</span></h2>
                                 </div>
                             </div>
                         </div>
                     </div>
                     <div class="col">
                         <div class="mt-3 mt-md-0 py-4 px-3">
-                            <h5 class="text-muted text-uppercase fs-13">Purchase GST</h5>
+                            <h5 class="text-muted text-uppercase fs-13">Vendor Accounts</h5>
                             <div class="d-flex align-items-center">
                                 <div class="flex-grow-1 ms-3">
-                                    <h2 class="mb-0 cfs-22"><span class="counter-value" data-target="{{totalPurchaseGst()}}">0</span></h2>
+                                    <h2 class="mb-0 cfs-22"><span class="counter-value" data-target="{{ accountBalanceByType('Vendor') }}">0</span></h2>
                                 </div>
                             </div>
                         </div>
                     </div>
                     <div class="col">
                         <div class="mt-3 mt-lg-0 py-4 px-3">
-                            <h5 class="text-muted text-uppercase fs-13">Sales GST</h5>
+                            <h5 class="text-muted text-uppercase fs-13">Investor Accounts</h5>
                             <div class="d-flex align-items-center">
                                 <div class="flex-grow-1 ms-3">
-                                    <h2 class="mb-0 cfs-22"><span class="counter-value" data-target="{{totalSaleGst()}}">0</span></h2>
+                                    <h2 class="mb-0 cfs-22"><span class="counter-value" data-target="{{ accountBalanceByType('Investor') }}">0</span></h2>
                                 </div>
                             </div>
                         </div>
                     </div>
                     <div class="col">
                         <div class="mt-3 mt-lg-0 py-4 px-3">
-                            <h5 class="text-muted text-uppercase fs-13">My Balance</h5>
+                            <h5 class="text-muted text-uppercase fs-13">Booked Advance</h5>
                             <div class="d-flex align-items-center">
                                 <div class="flex-grow-1 ms-3">
-                                    <h2 class="mb-0 cfs-22"><span class="counter-value" data-target="{{myBalance()}}">0</span></h2>
+                                    <h2 class="mb-0 cfs-22"><span class="counter-value" data-target="{{ totalAdvanceBooked() }}">0</span></h2>
                                 </div>
                             </div>
                         </div>
                     </div>
-                </div> --}}
+                </div>
             </div>
         </div>
     </div>

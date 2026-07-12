@@ -46,3 +46,20 @@ function myBalance()
     $balance = $accountsBalance + $stockValue;
     return $balance;
 }
+
+function accountBalanceByType($type)
+{
+    $accounts = accounts::where('type', $type)->get();
+    $balance = 0;
+    foreach ($accounts as $account) {
+        $balance += getAccountBalance($account->id);
+    }
+    return $balance;
+}
+
+function totalAdvanceBooked()
+{
+    $bookingAdvance = \App\Models\booking::sum('advance');
+    $importAdvance = \App\Models\import_cars::sum('booking_advance');
+    return $bookingAdvance + $importAdvance;
+}
