@@ -49,9 +49,9 @@ function loadCharts() {
         (t = getChartColorsArray("customer_impression_charts")) &&
             ((e = {
                 series: [
-                    { name: "Sales", type: "area", data: [34, 65, 46, 68, 49, 61, 42, 44, 78, 52, 63, 67] },
-                    { name: "Profit", type: "bar", data: [89.25, 98.58, 68.74, 108.87, 77.54, 84.03, 51.24, 28.57, 92.57, 42.36, 88.51, 36.57] },
-                    { name: "Expense", type: "line", data: [8, 12, 7, 17, 21, 11, 5, 9, 7, 29, 12, 35] },
+                    { name: "Sales", type: "area", data: window.monthlySales || [34, 65, 46, 68, 49, 61, 42, 44, 78, 52, 63, 67] },
+                    { name: "Profit", type: "bar", data: window.monthlyProfit || [89.25, 98.58, 68.74, 108.87, 77.54, 84.03, 51.24, 28.57, 92.57, 42.36, 88.51, 36.57] },
+                    { name: "Expense", type: "line", data: window.monthlyExpenses || [8, 12, 7, 17, 21, 11, 5, 9, 7, 29, 12, 35] },
                 ],
                 chart: { height: 370, type: "line", toolbar: { show: !1 } },
                 stroke: { curve: "straight", dashArray: [0, 0, 8], width: [2, 0, 2.2] },

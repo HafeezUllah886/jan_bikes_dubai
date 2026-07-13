@@ -37,10 +37,10 @@
                     </div>
                     <div class="col">
                         <div class="mt-3 mt-lg-0 py-4 px-3">
-                            <h5 class="text-muted text-uppercase fs-13">Investor Accounts</h5>
+                            <h5 class="text-muted text-uppercase fs-13">Available Purchases</h5>
                             <div class="d-flex align-items-center">
                                 <div class="flex-grow-1 ms-3">
-                                    <h2 class="mb-0 cfs-22"><span class="counter-value" data-target="{{ accountBalanceByType('Investor') }}">0</span></h2>
+                                    <h2 class="mb-0 cfs-22"><span class="counter-value" data-target="{{ totalAvailablePurchasesAmount() }}">0</span></h2>
                                 </div>
                             </div>
                         </div>
@@ -61,7 +61,7 @@
     </div>
 </div>
 <div class="row">
-   {{--  <div class="col-xl-12">
+    <div class="col-xl-12">
         <div class="card">
             <div class="card-header border-0 align-items-center d-flex">
                 <h4 class="card-title mb-0 flex-grow-1">Revenue (Monthly)</h4>
@@ -101,7 +101,7 @@
                 </div>
             </div>
         </div>
-    </div> --}}
+    </div>
 </div>
 <div class="row">
    {{--  <div class="col-xl-6">
@@ -190,9 +190,12 @@
 
 @endsection
 @section('page-js')
+       <script>
+           window.monthlySales = @json($monthlySales);
+           window.monthlyExpenses = @json($monthlyExpenses);
+           window.monthlyProfit = @json($monthlyProfit);
+       </script>
        <script src="{{ asset('assets/libs/apexcharts/apexcharts.min.js') }}"></script>
        <script src="{{asset('assets/js/pages/dashboard-ecommerce.init.js')}}"></script>
-       <script>
-       </script>
 @endsection
 

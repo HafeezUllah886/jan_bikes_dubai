@@ -3,6 +3,7 @@
 use App\Models\accounts;
 use App\Models\Booking;
 use App\Models\import_cars;
+use App\Models\parts_purchase;
 use App\Models\purchase;
 use App\Models\purchase_details;
 use App\Models\sale_details;
@@ -65,4 +66,22 @@ function totalAdvanceBooked()
     $importAdvance = import_cars::sum('booking_advance');
 
     return $bookingAdvance + $importAdvance;
+}
+
+function totalAvailablePurchasesAmount()
+{
+    $purchases = purchase::with('expenseProfits')->where('status', 'Available')->get();
+    $carsAndBikesCost = $purchases->sum(function ($p) {
+        return $p->costWithExpenseProfit();
+    });
+
+    $parts = parts_purchase::with('expenseProfits')->where('status', 'Available')->get();
+    $partsCost = $parts->sum(function ($part) {
+        $expense = $part->expenseProfits->where('type', 'expense')->sum('amount');
+        $profit = $part->expenseProfits->where('type', 'profit')->sum('amount');
+
+        return $part->total + $expense - $profit;
+    });
+
+    return $carsAndBikesCost + $partsCost;
 }
