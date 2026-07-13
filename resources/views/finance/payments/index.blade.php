@@ -68,13 +68,15 @@
                                                 <i class="ri-more-fill align-middle"></i>
                                             </button>
                                             <ul class="dropdown-menu dropdown-menu-end">
-                                                <li>
-                                                    <a class="dropdown-item text-danger"
-                                                        href="{{ route('receiving.delete', $tran->refID) }}">
-                                                        <i class="ri-delete-bin-2-fill align-bottom me-2 text-danger"></i>
-                                                        Delete
-                                                    </a>
-                                                </li>
+                                                @can('Payment Delete')
+                                                    <li>
+                                                        <a class="dropdown-item text-danger"
+                                                            href="{{ route('receiving.delete', $tran->refID) }}">
+                                                            <i class="ri-delete-bin-2-fill align-bottom me-2 text-danger"></i>
+                                                            Delete
+                                                        </a>
+                                                    </li>
+                                                @endcan
                                             </ul>
                                         </div>
                                     </td>

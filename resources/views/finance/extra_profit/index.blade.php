@@ -66,8 +66,10 @@
                                     <td>{{ $tran->notes }}</td>
                                     <td>{{ number_format($tran->amount) }}</td>
                                     <td>
-                                        <a href="{{ route('extra_profit.delete', $tran->refID) }}"
-                                            class="btn btn-danger">Delete</a>
+                                        @can('Extra Profit Delete')
+                                            <a href="{{ route('extra_profit.delete', $tran->refID) }}"
+                                                class="btn btn-danger">Delete</a>
+                                        @endcan
                                     </td>
                                 </tr>
                             @endforeach

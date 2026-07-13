@@ -62,36 +62,50 @@
                         <i class="ri-dashboard-2-line"></i> <span data-key="t-dashboards">Dashboards</span>
                     </a>
                 </li> <!-- end Dashboard Menu -->
-                <li class="nav-item">
-                    <a class="nav-link menu-link" href="{{ route('imports.index') }}">
-                        <i class="ri-shopping-cart-line"></i> <span data-key="t-dashboards">Imports</span>
-                    </a>
-                </li> <!-- end Dashboard Menu -->
-                <li class="nav-item">
-                    <a class="nav-link menu-link" href="{{ route('purchase.index') }}">
-                        <i class="ri-shopping-cart-line"></i> <span data-key="t-dashboards">Purchases</span>
-                    </a>
-                </li> <!-- end Dashboard Menu -->
-                <li class="nav-item">
-                    <a class="nav-link menu-link" href="{{ route('part_purchase.index') }}">
-                        <i class="ri-shopping-cart-line"></i> <span data-key="t-dashboards">Parts Purchases</span>
-                    </a>
-                </li> <!-- end Dashboard Menu -->
-                <li class="nav-item">
-                    <a class="nav-link menu-link" href="{{ route('stock.cars') }}">
-                        <i class="ri-car-line"></i> <span data-key="t-cars-stock">Cars Stock</span>
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link menu-link" href="{{ route('stock.parts') }}">
-                        <i class="ri-tools-line"></i> <span data-key="t-parts-stock">Parts Stock</span>
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link menu-link" href="#sale" data-bs-toggle="collapse" role="button"
-                        aria-expanded="false" aria-controls="sidebarApps">
-                        <i class="ri-shopping-cart-line"></i><span data-key="t-apps">Sale</span>
-                    </a>
+                @can('Imports History')
+                    <li class="nav-item">
+                        <a class="nav-link menu-link" href="{{ route('imports.index') }}">
+                            <i class="ri-shopping-cart-line"></i> <span data-key="t-dashboards">Imports</span>
+                        </a>
+                    </li>
+                @endcan
+                @can('Purchases History')
+                    <li class="nav-item">
+                        <a class="nav-link menu-link" href="{{ route('purchase.index') }}">
+                            <i class="ri-shopping-cart-line"></i> <span data-key="t-dashboards">Purchases</span>
+                        </a>
+                    </li> <!-- end Dashboard Menu -->
+                @endcan
+                @can('Parts Purchases History')
+                    <li class="nav-item">
+                        <a class="nav-link menu-link" href="{{ route('part_purchase.index') }}">
+                            <i class="ri-shopping-cart-line"></i> <span data-key="t-dashboards">Parts Purchases</span>
+                        </a>
+                    </li> <!-- end Dashboard Menu -->
+                @endcan
+                @can('Cars Stock')
+                    <li class="nav-item">
+                        <a class="nav-link menu-link" href="{{ route('stock.cars') }}">
+                            <i class="ri-car-line"></i> <span data-key="t-cars-stock">Cars Stock</span>
+                        </a>
+                    </li>
+                @endcan
+                @can('Parts Stock')
+                    <li class="nav-item">
+                        <a class="nav-link menu-link" href="{{ route('stock.parts') }}">
+                            <i class="ri-tools-line"></i> <span data-key="t-parts-stock">Parts Stock</span>
+                        </a>
+                    </li>
+                @endcan
+                @can('Sales History')
+                    <li class="nav-item">
+                        <a class="nav-link menu-link" href="#sale" data-bs-toggle="collapse" role="button"
+                            aria-expanded="false" aria-controls="sidebarApps">
+                            <i class="ri-shopping-cart-line"></i><span data-key="t-apps">Sale</span>
+                        </a>
+                    </li>
+
+
                     <div class="collapse menu-dropdown" id="sale">
                         <ul class="nav nav-sm flex-column">
                             <li class="nav-item">
@@ -100,7 +114,8 @@
                             </li>
                         </ul>
                     </div>
-                </li>
+                    </li>
+                @endcan
 
                 <li class="nav-item">
                     <a href="#sidebarFinance" class="nav-link" data-bs-toggle="collapse" role="button"
@@ -109,39 +124,55 @@
                     </a>
                     <div class="collapse menu-dropdown" id="sidebarFinance">
                         <ul class="nav nav-sm flex-column">
-                            <li class="nav-item">
-                                <a href="{{ route('accounts_adjustments.index') }}" class="nav-link"
-                                    data-key="t-level-2.1"> Account Adjustment </a>
-                            </li>
-                            <li class="nav-item">
-                                <a href="{{ route('transfers.index') }}" class="nav-link" data-key="t-level-2.1">
-                                    Transfer </a>
-                            </li>
-                            <li class="nav-item">
-                                <a href="{{ route('receivings.index') }}" class="nav-link" data-key="t-level-2.1">
-                                    Payment Receiving </a>
-                            </li>
-                            <li class="nav-item">
-                                <a href="{{ route('payments.index') }}" class="nav-link" data-key="t-level-2.1">
-                                    Payments </a>
-                            </li>
-                            <li class="nav-item">
-                                <a href="{{ route('advances.index') }}" class="nav-link" data-key="t-level-2.1">
-                                    Advance Payments </a>
-                            </li>
-                            <li class="nav-item">
-                                <a href="{{ route('expenses.index') }}" class="nav-link" data-key="t-level-2.1">
-                                    Expense </a>
-                            </li>
-                            <li class="nav-item">
-                                <a href="{{ route('extra_profit.index') }}" class="nav-link" data-key="t-level-2.1">
-                                    Extra Profit </a>
-                            </li>
-                            <li class="nav-item">
-                                <a href="{{ route('profit_distribution.index') }}" class="nav-link"
-                                    data-key="t-level-2.1">
-                                    Profit Distribution </a>
-                            </li>
+                            @can('Account Adjustments View')
+                                <li class="nav-item">
+                                    <a href="{{ route('accounts_adjustments.index') }}" class="nav-link"
+                                        data-key="t-level-2.1"> Account Adjustment </a>
+                                </li>
+                            @endcan
+                            @can('Transfers View')
+                                <li class="nav-item">
+                                    <a href="{{ route('transfers.index') }}" class="nav-link" data-key="t-level-2.1">
+                                        Transfer </a>
+                                </li>
+                            @endcan
+                            @can('Payment Receiving View')
+                                <li class="nav-item">
+                                    <a href="{{ route('receivings.index') }}" class="nav-link" data-key="t-level-2.1">
+                                        Payment Receiving </a>
+                                </li>
+                            @endcan
+                            @can('Payments View')
+                                <li class="nav-item">
+                                    <a href="{{ route('payments.index') }}" class="nav-link" data-key="t-level-2.1">
+                                        Payments </a>
+                                </li>
+                            @endcan
+                            @can('Advance Payments View')
+                                <li class="nav-item">
+                                    <a href="{{ route('advances.index') }}" class="nav-link" data-key="t-level-2.1">
+                                        Advance Payments </a>
+                                </li>
+                            @endcan
+                            @can('Expenses View')
+                                <li class="nav-item">
+                                    <a href="{{ route('expenses.index') }}" class="nav-link" data-key="t-level-2.1">
+                                        Expense </a>
+                                </li>
+                            @endcan
+                            @can('Extra Profit View')
+                                <li class="nav-item">
+                                    <a href="{{ route('extra_profit.index') }}" class="nav-link" data-key="t-level-2.1">
+                                        Extra Profit </a>
+                                </li>
+                            @endcan
+                            @can('Profit Distribution View')
+                                <li class="nav-item">
+                                    <a href="{{ route('profit_distribution.index') }}" class="nav-link"
+                                        data-key="t-level-2.1">
+                                        Profit Distribution </a>
+                                </li>
+                            @endcan
                         </ul>
                     </div>
                 </li>
@@ -152,14 +183,12 @@
                     </a>
                     <div class="collapse menu-dropdown" id="sidebarReports">
                         <ul class="nav nav-sm flex-column">
-                            {{-- <li class="nav-item">
-                                <a href="{{ route('reportLedger') }}" class="nav-link" data-key="t-level-2.1">
-                                    Ledger Report </a>
-                            </li> --}}
-                            <li class="nav-item">
-                                <a href="{{ route('reportProfitLoss') }}" class="nav-link" data-key="t-level-2.1">
-                                    Profit Loss Report </a>
-                            </li>
+                            @can('Profit Loss Report')
+                                <li class="nav-item">
+                                    <a href="{{ route('reportProfitLoss') }}" class="nav-link" data-key="t-level-2.1">
+                                        Profit Loss Report </a>
+                                </li>
+                            @endcan
                         </ul>
                     </div>
                 </li>
@@ -170,26 +199,58 @@
                     </a>
                     <div class="collapse menu-dropdown" id="sidebarAccount">
                         <ul class="nav nav-sm flex-column">
-                            <li class="nav-item">
-                                <a href="{{ route('account.create') }}" class="nav-link" data-key="t-level-2.1">
-                                    Create Account </a>
-                            </li>
-                            <li class="nav-item">
-                                <a href="{{ route('accountsList', 'Business') }}" class="nav-link"
-                                    data-key="t-level-2.1"> Business </a>
-                            </li>
-                            <li class="nav-item">
-                                <a href="{{ route('accountsList', 'Customer') }}" class="nav-link"
-                                    data-key="t-level-2.1"> Customer </a>
-                            </li>
-                            <li class="nav-item">
-                                <a href="{{ route('accountsList', 'Vendor') }}" class="nav-link"
-                                    data-key="t-level-2.1"> Vendor </a>
-                            </li>
-                            <li class="nav-item">
-                                <a href="{{ route('accountsList', 'Investor') }}" class="nav-link"
-                                    data-key="t-level-2.1"> Investors </a>
-                            </li>
+                            @can('Account Create')
+                                <li class="nav-item">
+                                    <a href="{{ route('account.create') }}" class="nav-link" data-key="t-level-2.1">
+                                        Create Account </a>
+                                </li>
+                            @endcan
+                            @can('Account Business')
+                                <li class="nav-item">
+                                    <a href="{{ route('accountsList', 'Business') }}" class="nav-link"
+                                        data-key="t-level-2.1"> Business </a>
+                                </li>
+                            @endcan
+                            @can('Account Customer')
+                                <li class="nav-item">
+                                    <a href="{{ route('accountsList', 'Customer') }}" class="nav-link"
+                                        data-key="t-level-2.1"> Customer </a>
+                                </li>
+                            @endcan
+                            @can('Account Vendor')
+                                <li class="nav-item">
+                                    <a href="{{ route('accountsList', 'Vendor') }}" class="nav-link"
+                                        data-key="t-level-2.1"> Vendor </a>
+                                </li>
+                            @endcan
+                            @can('Account Investor')
+                                <li class="nav-item">
+                                    <a href="{{ route('accountsList', 'Investor') }}" class="nav-link"
+                                        data-key="t-level-2.1"> Investors </a>
+                                </li>
+                            @endcan
+                        </ul>
+                    </div>
+                </li>
+                <li class="nav-item">
+                    <a href="#sidebarUsers" class="nav-link" data-bs-toggle="collapse" role="button"
+                        aria-expanded="false" aria-controls="sidebarUsers" data-key="t-level-1.2">
+                        <i class="ri-user-settings-line"></i><span data-key="t-apps">User Management</span>
+                    </a>
+                    <div class="collapse menu-dropdown" id="sidebarUsers">
+                        <ul class="nav nav-sm flex-column">
+                            @can('User Create')
+                                <li class="nav-item">
+                                    <a href="{{ route('users.index') }}" class="nav-link" data-key="t-level-2.1">
+                                        Users </a>
+                                </li>
+                            @endcan
+                            @can('Role Create')
+                                <li class="nav-item">
+                                    <a href="{{ route('roles.index') }}" class="nav-link" data-key="t-level-2.1">
+                                        Roles </a>
+                                </li>
+                            @endcan
                         </ul>
                     </div>
                 </li>

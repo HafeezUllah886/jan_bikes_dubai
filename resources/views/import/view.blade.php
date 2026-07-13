@@ -6,10 +6,12 @@
                 <div class="row">
                     <div class="col-lg-12">
                         <div class="hstack gap-2 justify-content-end d-print-none p-2 mt-4">
-                            @if ($import->status != 'Approved')
-                                <button type="button" data-bs-toggle="modal" data-bs-target="#new"
-                                    class="btn btn-primary ml-4">Approve</button>
-                            @endif
+                            @can('Imports Approve')
+                                @if ($import->status != 'Approved')
+                                    <button type="button" data-bs-toggle="modal" data-bs-target="#new"
+                                        class="btn btn-primary ml-4">Approve</button>
+                                @endif
+                            @endcan
                             <a href="javascript:window.print()" class="btn btn-success ml-4"><i
                                     class="ri-printer-line mr-4"></i> Print</a>
                         </div>

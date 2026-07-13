@@ -2,7 +2,6 @@
 
 use App\Http\Controllers\authController;
 use App\Http\Controllers\confirmPasswordController;
-use App\Http\Controllers\OrderbookerController;
 use App\Http\Controllers\profileController;
 use App\Http\Middleware\adminCheck;
 use Illuminate\Support\Facades\Route;
@@ -19,6 +18,8 @@ Route::middleware('auth')->group(function () {
     Route::get('/profile', [profileController::class, 'index'])->name('profile');
     Route::post('/profile/update', [profileController::class, 'update'])->name('updateProfile');
     Route::post('/profile/changepassword', [profileController::class, 'changePassword'])->name('changePassword');
+    
+    Route::resource('users', \App\Http\Controllers\UserController::class);
+    Route::resource('roles', \App\Http\Controllers\RoleController::class);
 
-    Route::resource('orderbooker', OrderbookerController::class)->middleware(adminCheck::class);
 });

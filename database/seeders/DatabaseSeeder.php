@@ -4,7 +4,6 @@ namespace Database\Seeders;
 
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 
-use App\Models\auctions;
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
@@ -16,9 +15,10 @@ class DatabaseSeeder extends Seeder
     {
         // User::factory(10)->create();
 
-      $this->call(accountsSeeder::class); 
-       $this->call(userSeeder::class);
-      /*  $this->call(payment_categories_seeder::class); */
+        $this->call(accountsSeeder::class);
+        $this->call(userSeeder::class);
+        $this->call(PermissionSeeder::class);
+        /*  $this->call(payment_categories_seeder::class); */
 
     }
 }

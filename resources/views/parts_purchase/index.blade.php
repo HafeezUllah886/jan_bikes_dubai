@@ -93,14 +93,15 @@
                                                         View
                                                     </button>
                                                 </li>
-                                                <li>
-                                                    <button class="dropdown-item view-expense-profit"
-                                                        type="button"
-                                                        data-purchase-id="{{ $purchase->id }}">
-                                                        <i class="ri-file-list-3-line align-bottom me-2 text-muted"></i>
-                                                        Expense/Profit
-                                                    </button>
-                                                </li>
+                                                @can('Purchases Expenses')
+                                                    <li>
+                                                        <button class="dropdown-item view-expense-profit" type="button"
+                                                            data-purchase-id="{{ $purchase->id }}">
+                                                            <i class="ri-file-list-3-line align-bottom me-2 text-muted"></i>
+                                                            Expense/Profit
+                                                        </button>
+                                                    </li>
+                                                @endcan
 
                                             </ul>
                                         </div>
@@ -117,7 +118,8 @@
     </div>
 
 
-    <div class="modal fade" id="expenseProfitModal" tabindex="-1" aria-labelledby="expenseProfitModalLabel" aria-hidden="true">
+    <div class="modal fade" id="expenseProfitModal" tabindex="-1" aria-labelledby="expenseProfitModalLabel"
+        aria-hidden="true">
         <div class="modal-dialog modal-xl modal-dialog-centered modal-dialog-scrollable">
             <div class="modal-content">
                 <div class="modal-header">
@@ -154,32 +156,35 @@
     <script src="{{ asset('assets/libs/datatable/jszip.min.js') }}"></script>
     <script src="{{ asset('assets/js/pages/datatables.init.js') }}"></script>
     <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            document.querySelectorAll('.view-expense-profit').forEach(function (button) {
-                button.addEventListener('click', function () {
+        document.addEventListener('DOMContentLoaded', function() {
+            document.querySelectorAll('.view-expense-profit').forEach(function(button) {
+                button.addEventListener('click', function() {
                     var purchaseId = this.dataset.purchaseId;
                     var url = '/part_purchase/' + purchaseId + '/expense-profit';
                     var modalBody = document.querySelector('#expenseProfitModal .modal-body');
-                    modalBody.innerHTML = '<div class="text-center py-5">Loading expense/profit details...</div>';
+                    modalBody.innerHTML =
+                        '<div class="text-center py-5">Loading expense/profit details...</div>';
 
                     fetch(url, {
-                        headers: {
-                            'X-Requested-With': 'XMLHttpRequest'
-                        }
-                    })
-                        .then(function (response) {
+                            headers: {
+                                'X-Requested-With': 'XMLHttpRequest'
+                            }
+                        })
+                        .then(function(response) {
                             if (!response.ok) {
                                 throw new Error('Network response was not ok');
                             }
                             return response.text();
                         })
-                        .then(function (html) {
+                        .then(function(html) {
                             modalBody.innerHTML = html;
-                            var expenseProfitModal = new bootstrap.Modal(document.getElementById('expenseProfitModal'));
+                            var expenseProfitModal = new bootstrap.Modal(document
+                                .getElementById('expenseProfitModal'));
                             expenseProfitModal.show();
                         })
-                        .catch(function () {
-                            modalBody.innerHTML = '<div class="alert alert-danger">Unable to load expense/profit details.</div>';
+                        .catch(function() {
+                            modalBody.innerHTML =
+                                '<div class="alert alert-danger">Unable to load expense/profit details.</div>';
                         });
                 });
             });

@@ -98,13 +98,15 @@
                                                         </a>
                                                     </li>
                                                 @endif
-                                                <li>
-                                                    <a class="dropdown-item text-danger"
-                                                        href="{{ route('advance.delete', $tran->refID) }}">
-                                                        <i class="ri-delete-bin-2-fill align-bottom me-2 text-danger"></i>
-                                                        Delete
-                                                    </a>
-                                                </li>
+                                                @can('Advance Delete')
+                                                    <li>
+                                                        <a class="dropdown-item text-danger"
+                                                            href="{{ route('advance.delete', $tran->refID) }}">
+                                                            <i class="ri-delete-bin-2-fill align-bottom me-2 text-danger"></i>
+                                                            Delete
+                                                        </a>
+                                                    </li>
+                                                @endcan
                                             </ul>
                                         </div>
                                     </td>

@@ -67,13 +67,15 @@
                                                 <i class="ri-more-fill align-middle"></i>
                                             </button>
                                             <ul class="dropdown-menu dropdown-menu-end">
-                                                <li>
-                                                    <a class="dropdown-item text-danger"
-                                                        href="{{ route('accounts_adjustment.delete', $tran->refID) }}">
-                                                        <i class="ri-delete-bin-2-fill align-bottom me-2 text-danger"></i>
-                                                        Delete
-                                                    </a>
-                                                </li>
+                                                @can('Accounts Adjustment Delete')
+                                                    <li>
+                                                        <a class="dropdown-item text-danger"
+                                                            href="{{ route('accounts_adjustment.delete', $tran->refID) }}">
+                                                            <i class="ri-delete-bin-2-fill align-bottom me-2 text-danger"></i>
+                                                            Delete
+                                                        </a>
+                                                    </li>
+                                                @endcan
                                             </ul>
                                         </div>
                                     </td>
@@ -125,7 +127,7 @@
                             <input type="date" name="date" required id="date" value="{{ date('Y-m-d') }}"
                                 class="form-control">
                         </div>
-                        
+
                         <div class="form-group mt-2">
                             <label for="notes">Notes</label>
                             <textarea name="notes" id="notes" cols="30" class="form-control" rows="5"></textarea>

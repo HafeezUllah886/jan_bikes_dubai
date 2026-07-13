@@ -73,21 +73,25 @@
                                                     </button>
                                                 </li>
 
-                                                {{--  <li>
-                                                    <a class="dropdown-item"
-                                                        onclick="newWindow('{{ route('sale.edit', $sale->id) }}')">
-                                                        <i class="ri-pencil-fill align-bottom me-2 text-muted"></i>
-                                                        Edit
-                                                    </a>
-                                                </li> --}}
+                                                @can('Sales Edit')
+                                                    <li>
+                                                        <a class="dropdown-item"
+                                                            onclick="newWindow('{{ route('sale.edit', $sale->id) }}')">
+                                                            <i class="ri-pencil-fill align-bottom me-2 text-muted"></i>
+                                                            Edit
+                                                        </a>
+                                                    </li>
+                                                @endcan
 
-                                                <li>
-                                                    <a class="dropdown-item text-danger"
-                                                        href="{{ route('sale.delete', $sale->id) }}">
-                                                        <i class="ri-delete-bin-2-fill align-bottom me-2 text-danger"></i>
-                                                        Delete
-                                                    </a>
-                                                </li>
+                                                @can('Sales Delete')
+                                                    <li>
+                                                        <a class="dropdown-item text-danger"
+                                                            href="{{ route('sale.delete', $sale->id) }}">
+                                                            <i class="ri-delete-bin-2-fill align-bottom me-2 text-danger"></i>
+                                                            Delete
+                                                        </a>
+                                                    </li>
+                                                @endcan
                                             </ul>
                                         </div>
                                     </td>

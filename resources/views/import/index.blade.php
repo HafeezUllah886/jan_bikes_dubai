@@ -90,12 +90,15 @@
                                                         View
                                                     </button>
                                                 </li>
-                                                <li>
-                                                    <a class="dropdown-item text-danger"
-                                                        href="{{ route('imports.delete', $import->id) }}"><i
-                                                            class="ri-delete-bin-fill align-bottom me-2 text-muted"></i>
-                                                        Delete
-                                                    </a>
+                                                @can('Imports Delete')
+                                                    <li>
+                                                        <a class="dropdown-item text-danger"
+                                                            href="{{ route('imports.delete', $import->id) }}"><i
+                                                                class="ri-delete-bin-fill align-bottom me-2 text-muted"></i>
+                                                            Delete
+                                                        </a>
+                                                    </li>
+                                                @endcan
                                                 </li>
 
                                             </ul>
