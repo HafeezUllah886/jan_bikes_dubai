@@ -63,8 +63,21 @@
                                     <h5 class="fs-14 mb-0">{{ number_format($purchase->expense) }}</h5>
                                 </div>
                                 <div class="col-lg-3 col-6">
+                                    <p class="text-muted mb-2 text-uppercase fw-semibold">Extra Expense/Profit</p>
+                                    @php
+                                        $extra_expense = $purchase->expenseProfits
+                                            ->where('type', 'expense')
+                                            ->sum('amount');
+                                        $extra_profit = $purchase->expenseProfits
+                                            ->where('type', 'profit')
+                                            ->sum('amount');
+                                    @endphp
+                                    <h5 class="fs-14 mb-0">{{ number_format($extra_expense - $extra_profit) }}</h5>
+                                </div>
+                                <div class="col-lg-3 col-6">
                                     <p class="text-muted mb-2 text-uppercase fw-semibold">Total</p>
-                                    <h5 class="fs-14 mb-0">{{ number_format($purchase->total) }}</h5>
+                                    <h5 class="fs-14 mb-0">
+                                        {{ number_format($purchase->total + $extra_expense - $extra_profit) }}</h5>
                                 </div>
                                 <div class="col-lg-3 col-6">
                                     <p class="text-muted mb-2 text-uppercase fw-semibold">Sale Price</p>
