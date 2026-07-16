@@ -41,7 +41,7 @@ class PurchaseController extends Controller
             }
             $purchases = $purchases->get();
         }
-        $invoices = purchase::where('status', 'Available')->select('inv_no')->distinct()->get();
+        $invoices = purchase::select('inv_no')->distinct()->get();
 
         $imports = purchase::whereNotNull('import_id')->distinct('import_id')->pluck('import_id')->toArray();
         $imports = imports::whereIn('id', $imports)->get();

@@ -44,6 +44,7 @@
                                         <table class="table table-bordered">
                                             <thead>
                                                 <tr class="table-active">
+                                                    <th class='no-padding'>#</th>
                                                     <th class='no-padding'>Chassis No.</th>
                                                     <th class='no-padding'>Company</th>
                                                     <th class='no-padding'>Model</th>
@@ -98,9 +99,10 @@
                                                     }
 
                                                 @endphp
-                                                @foreach ($import->cars as $car)
+                                                @foreach ($import->cars as $key => $car)
                                                     @if ($car->type == 'Car')
                                                         <tr>
+                                                            <td class='no-padding'>{{ $key + 1 }}</td>
                                                             <td class='no-padding'>{{ $car->chassis }}</td>
                                                             <td class='no-padding'>{{ $car->company }}</td>
                                                             <td class='no-padding'>{{ $car->model }}</td>
@@ -153,7 +155,7 @@
                                             </tbody>
                                             <tfoot>
                                                 <tr class="table-active">
-                                                    <th colspan="7" class="text-end no-padding">Total</th>
+                                                    <th colspan="8" class="text-end no-padding">Total</th>
                                                     <th class="text-end no-padding">
                                                         {{ number_format($import->cars->where('type', 'Car')->sum('price')) }}
                                                     </th>
@@ -180,6 +182,7 @@
                                         <table class="table table-bordered">
                                             <thead>
                                                 <tr class="table-active">
+                                                    <th class='no-padding'>#</th>
                                                     <th class='no-padding'>Chassis No.</th>
                                                     <th class='no-padding'>Company</th>
                                                     <th class='no-padding'>Model</th>
@@ -197,9 +200,10 @@
                                                 </tr>
                                             </thead>
                                             <tbody>
-                                                @foreach ($import->cars as $car)
+                                                @foreach ($import->cars as $key => $car)
                                                     @if ($car->type == 'Bike')
                                                         <tr>
+                                                            <td class='no-padding'>{{ $key + 1 }}</td>
                                                             <td class='no-padding'>{{ $car->chassis }}</td>
                                                             <td class='no-padding'>{{ $car->company }}</td>
                                                             <td class='no-padding'>{{ $car->model }}</td>
@@ -253,7 +257,7 @@
                                             </tbody>
                                             <tfoot>
                                                 <tr class="table-active">
-                                                    <th colspan="7" class="text-end no-padding">Total</th>
+                                                    <th colspan="8" class="text-end no-padding">Total</th>
                                                     <th class="text-end no-padding">
                                                         {{ number_format($import->cars->where('type', 'Bike')->sum('price')) }}
                                                     </th>
@@ -280,8 +284,8 @@
                                         <table class="table table-bordered">
                                             <thead>
                                                 <tr class="table-active">
+                                                    <th class='no-padding'>#</th>
                                                     <th class='no-padding'>Description</th>
-
                                                     <th class='no-padding text-center'>Price</th>
                                                     <th class='no-padding text-center'>Japan Expense</th>
                                                     <th class='no-padding text-center'>Dubai Expense</th>
@@ -293,13 +297,13 @@
                                                 </tr>
                                             </thead>
                                             <tbody>
-                                                @foreach ($import->parts as $part)
+                                                @foreach ($import->parts as $key => $part)
                                                     @php
                                                         $part_price = $part->price / $part->qty;
                                                     @endphp
                                                     <tr>
+                                                        <td class='no-padding'>{{ $key + 1 }}</td>
                                                         <td class='no-padding'>{{ $part->part_name }}</td>
-
                                                         <td class='no-padding text-center'>
                                                             <input type="number" readonly name="part_price[]"
                                                                 value="{{ round($part_price, 4) }}" class="form-control">
@@ -342,7 +346,7 @@
                                             </tbody>
                                             <tfoot>
                                                 <tr class="table-active">
-                                                    <th class="text-end no-padding">Total</th>
+                                                    <th colspan="2" class="text-end no-padding">Total</th>
 
                                                     <th class="text-end no-padding text-center">
                                                         {{ number_format(round($import->parts->sum('price'), 4)) }}</th>
