@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\accounts;
 use App\Models\Booking;
 use App\Models\import_cars;
 use App\Models\import_parts;
@@ -70,7 +71,7 @@ class ImportApprovalController extends Controller
                         'color' => $car->color,
                         'chassis' => $car->chassis,
                         'engine' => $car->engine,
-                        'date' => now(),
+                        'date' => $request->date,
                         'price' => $car->price,
                         'expense' => $request->expense_per_car_japan[$key] + $request->expense_per_car_dubai[$key],
                         'total' => $request->car_net_cost[$key],
@@ -87,8 +88,8 @@ class ImportApprovalController extends Controller
 
                     if ($car->booking_customer_id) {
 
-                        $customerExists = \App\Models\accounts::find($car->booking_customer_id);
-                        if (!$customerExists) {
+                        $customerExists = accounts::find($car->booking_customer_id);
+                        if (! $customerExists) {
                             throw new \Exception("Customer for booking (ID: {$car->booking_customer_id}) does not exist.");
                         }
 
@@ -97,7 +98,7 @@ class ImportApprovalController extends Controller
                             'customer_id' => $car->booking_customer_id,
                             'price' => $car->booking_price,
                             'advance' => $car->booking_advance ?? 0,
-                            'date' => $car->booking_date ?? now(),
+                            'date' => $car->booking_date ?? $request->date,
                             'notes' => $car->booking_notes,
                             'refID' => $ref,
                         ]);
@@ -129,7 +130,7 @@ class ImportApprovalController extends Controller
                         'total' => $request->part_net_cost[$key],
                         'sale_price' => $request->part_sale_price[$key],
                         'min_price' => $request->part_min_price[$key],
-                        'date' => now(),
+                        'date' => $request->date,
                         'purchase_type' => 'Import',
                         'refID' => $ref,
                         'import_id' => $id,

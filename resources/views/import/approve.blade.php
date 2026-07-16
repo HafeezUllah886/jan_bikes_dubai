@@ -20,20 +20,22 @@
                     </div><!--end col-->
                     <div class="col-lg-12 ">
                         <div class="card-body p-4">
-                            <div class="row g-3">
-                                <div class="col-lg-3 col-6">
-                                    <p class="text-muted mb-2 text-uppercase fw-semibold">Date</p>
-                                    <h5 class="fs-14 mb-0">{{ date('d M Y', strtotime($import->date)) }}</h5>
-                                </div>
-                                <div class="col-lg-3 col-6">
-                                    <p class="text-muted mb-2 text-uppercase fw-semibold">Invoice No.</p>
-                                    <h5 class="fs-14 mb-0">{{ $import->inv_no }}</h5>
-                                </div>
-                                <div class="col-lg-3 col-6">
-                                    <p class="text-muted mb-2 text-uppercase fw-semibold">Container No.</p>
-                                    <h5 class="fs-14 mb-0">{{ $import->c_no }}</h5>
-                                </div>
-                                <form action="{{ route('imports.approve.store', $import->id) }}" method="POST">
+                            <form action="{{ route('imports.approve.store', $import->id) }}" method="POST">
+                                <div class="row g-3">
+                                    <div class="col-lg-3 col-6">
+                                        <p class="text-muted mb-2 text-uppercase fw-semibold">Date</p>
+                                        <h5 class="fs-14 mb-0"><input type="date" name="date" class="form-control"
+                                                value="{{ $import->date }}"></h5>
+                                    </div>
+                                    <div class="col-lg-3 col-6">
+                                        <p class="text-muted mb-2 text-uppercase fw-semibold">Invoice No.</p>
+                                        <h5 class="fs-14 mb-0">{{ $import->inv_no }}</h5>
+                                    </div>
+                                    <div class="col-lg-3 col-6">
+                                        <p class="text-muted mb-2 text-uppercase fw-semibold">Container No.</p>
+                                        <h5 class="fs-14 mb-0">{{ $import->c_no }}</h5>
+                                    </div>
+
                                     @csrf
                                     <div class="col-12 mt-1">
                                         <div class="card-header">
@@ -361,18 +363,18 @@
                                         </table>
                                     </div>
                                     <button type="submit" class="btn btn-primary w-100">Approve</button>
-                                </form>
-                            </div>
-                            <!--end row-->
+                            </form>
                         </div>
+                        <!--end row-->
+                    </div>
 
-                        <!--end card-body-->
-                    </div><!--end col-->
-                </div><!--end row-->
-            </div>
-            <!--end card-->
+                    <!--end card-body-->
+                </div><!--end col-->
+            </div><!--end row-->
         </div>
-        <!--end col-->
+        <!--end card-->
+    </div>
+    <!--end col-->
     </div>
     <!--end row-->
 @endsection
