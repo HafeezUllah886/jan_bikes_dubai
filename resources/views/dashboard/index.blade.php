@@ -81,6 +81,17 @@
                 <div class="card">
                     <div class="card-header border-0 align-items-center d-flex">
                         <h4 class="card-title mb-0 flex-grow-1">Revenue (Monthly)</h4>
+                        <div class="flex-shrink-0">
+                            <form action="" method="GET">
+                                <select name="year" class="form-select form-select-sm" onchange="this.form.submit()">
+                                    @for ($y = date('Y'); $y >= date('Y') - 5; $y--)
+                                        <option value="{{ $y }}"
+                                            {{ request('year', date('Y')) == $y ? 'selected' : '' }}>{{ $y }}
+                                        </option>
+                                    @endfor
+                                </select>
+                            </form>
+                        </div>
                     </div>
                     <div class="card-header p-0 border-0 bg-light-subtle">
                         <div class="row g-0 text-center">

@@ -18,7 +18,6 @@
                                 value="{{ $end }}" aria-label="Username" aria-describedby="basic-addon1">
                         </div>
                     </div>
-
                     <div class="col-md-2">
                         <input type="submit" value="Filter" class="btn btn-success w-100">
                     </div>

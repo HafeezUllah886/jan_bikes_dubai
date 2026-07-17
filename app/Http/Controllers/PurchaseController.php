@@ -29,18 +29,18 @@ class PurchaseController extends Controller
         $start = $request->start ?? firstDayOfMonth();
         $end = $request->end ?? lastDayOfMonth();
         $inv_no = $request->inv_no ?? null;
-        $status = $request->status ?? 'all';
+        $status = $request->status;
+        $filter = $request->filter ?? 'dates';
 
-        if ($inv_no) {
-            $purchases = purchase::where('inv_no', $inv_no)->get();
-        } else {
-
+        if ($filter == 'dates') {
             $purchases = purchase::whereBetween('date', [$start, $end]);
-            if ($status != 'all') {
-                $purchases = $purchases->where('status', $status);
-            }
-            $purchases = $purchases->get();
+        } elseif ($filter == 'status') {
+            $purchases = purchase::where('status', $status);
+        } elseif ($filter == 'inv_no') {
+            $purchases = purchase::where('inv_no', $inv_no);
         }
+        $purchases = $purchases->get();
+
         $invoices = purchase::select('inv_no')->distinct()->get();
 
         $imports = purchase::whereNotNull('import_id')->distinct('import_id')->pluck('import_id')->toArray();

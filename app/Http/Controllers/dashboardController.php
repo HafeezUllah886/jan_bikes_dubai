@@ -5,16 +5,17 @@ namespace App\Http\Controllers;
 
 use App\Models\sales;
 use App\Models\expenses;
+use Illuminate\Http\Request;
 
 class dashboardController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
         $monthlySales = [];
         $monthlyExpenses = [];
         $monthlyProfit = [];
 
-        $currentYear = date('Y');
+        $currentYear = $request->input('year', date('Y'));
 
         for ($i = 1; $i <= 12; $i++) {
             $salesForMonth = sales::whereYear('date', $currentYear)->whereMonth('date', $i)->sum('total');

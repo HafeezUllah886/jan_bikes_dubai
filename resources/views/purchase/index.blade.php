@@ -4,14 +4,14 @@
         <div class="col-12">
             <form>
                 <div class="row">
-                    <div class="col-md-3">
+                    <div class="col-md-2">
                         <div class="input-group mb-3">
                             <span class="input-group-text" id="basic-addon1">From</span>
                             <input type="date" class="form-control" placeholder="Username" name="start"
                                 value="{{ $start }}" aria-label="Username" aria-describedby="basic-addon1">
                         </div>
                     </div>
-                    <div class="col-md-3">
+                    <div class="col-md-2">
                         <div class="input-group mb-3">
                             <span class="input-group-text" id="basic-addon1">To</span>
                             <input type="date" class="form-control" placeholder="Username" name="end"
@@ -39,6 +39,16 @@
                                         {{ $invoice->inv_no == $inv_no ? 'selected' : '' }}>
                                         {{ $invoice->inv_no }}</option>
                                 @endforeach
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <div class="input-group mb-3">
+                            <span class="input-group-text" id="basic-addon1">Filter By</span>
+                            <select name="stock" id="stock" class="form-control">
+                                <option value="dates">Filter by Dates</option>
+                                <option value="status">Filter by Status</option>
+                                <option value="inv_no">Filter by Inv No</option>
                             </select>
                         </div>
                     </div>
@@ -342,7 +352,8 @@
                     <div class="modal-content">
                         <div class="modal-header">
                             <h5 class="modal-title" id="viewBookingModalLabel{{ $purchase->id }}">Booking Details
-                                (Chassis: {{ $purchase->chassis }})</h5>
+                                (Chassis: {{ $purchase->chassis }})
+                            </h5>
                             <button type="button" class="btn-close" data-bs-dismiss="modal"
                                 aria-label="Close"></button>
                         </div>
