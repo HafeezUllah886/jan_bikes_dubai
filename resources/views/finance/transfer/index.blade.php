@@ -62,7 +62,7 @@
                                     <td>{{ $tran->notes }}</td>
                                     <td>{{ number_format($tran->amount) }}</td>
                                     <td>
-                                        @can('Transfer Delete')
+                                        @can('Transfers Delete')
                                             <a href="{{ route('transfers.delete', $tran->refID) }}"
                                                 class="btn btn-danger">Delete</a>
                                         @endcan
