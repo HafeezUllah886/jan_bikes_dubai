@@ -76,7 +76,7 @@
                                                         View
                                                     </button>
                                                 </li>
-                                                @can('Receiving Delete')
+                                                @can('Payment Receiving Delete')
                                                     <li>
                                                         <a class="dropdown-item text-danger"
                                                             href="{{ route('receiving.delete', $tran->refID) }}">
