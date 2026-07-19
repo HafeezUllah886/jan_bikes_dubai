@@ -107,11 +107,11 @@ class ImportApprovalController extends Controller
                             'status' => 'Booked',
                         ]);
 
-                        createTransaction($car->booking_customer_id, $purchase->date, $car->booking_price, 0, 'Purchase Booked - Chassis No. '.$purchase->chassis, $ref);
+                        createTransaction($car->booking_customer_id, $request->date, $car->booking_price, 0, 'Purchase Booked - Chassis No. '.$purchase->chassis, $ref);
 
                         if ($car->booking_advance > 0) {
 
-                            createTransaction($car->booking_customer_id, $purchase->date, 0, $car->booking_advance, 'Advance for Purchase Booked - Chassis No. '.$purchase->chassis, $ref);
+                            createTransaction($car->booking_customer_id, $request->date, 0, $car->booking_advance, 'Advance for Purchase Booked - Chassis No. '.$purchase->chassis, $ref);
                         }
                     }
                 }
@@ -140,7 +140,7 @@ class ImportApprovalController extends Controller
                 }
             }
 
-            createTransaction(2, now(), 0, $total, 'Pending Amount of Inv No. '.$import->inv_no, $ref);
+            createTransaction(2, $request->date, 0, $total, 'Pending Amount of Inv No. '.$import->inv_no, $ref);
             imports::findOrFail($id)->update([
                 'status' => 'Approved',
             ]);
