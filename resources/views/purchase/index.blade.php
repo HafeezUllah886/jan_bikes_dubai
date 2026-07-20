@@ -45,7 +45,7 @@
                     <div class="col-md-2">
                         <div class="input-group mb-3">
                             <span class="input-group-text" id="basic-addon1">Filter By</span>
-                            <select name="stock" id="stock" class="form-control">
+                            <select name="filter" id="filter" class="form-control">
                                 <option value="dates">Filter by Dates</option>
                                 <option value="status">Filter by Status</option>
                                 <option value="inv_no">Filter by Inv No</option>
